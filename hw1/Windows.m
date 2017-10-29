@@ -25,7 +25,7 @@ classdef Windows < handle
             if obj.final
                 error('Frame out of bound');
             end
-            if obj.idx + obj.w_size - 1 > len
+            if obj.idx + obj.w_size - 1 >= len
                 pre_frame = obj.pre_sig(obj.idx:end);
                 post_frame = obj.post_sig(obj.idx:end);
                 final = true;
