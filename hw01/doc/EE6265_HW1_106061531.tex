@@ -178,6 +178,30 @@
 \maketitle
 \newpage
 
+\section{Introduction}
+For \textbf{Focused Ultrasound Thermal Therapy}, an important technique is to estimate the temperature change before and after applying it.
+The estimation can be derived by the echo-time shift before and after heating. Moreover, the temperature change can be formula as:
+\begin{align}
+\Delta T(z) = \frac{C_0}{2} \cdot K \cdot \frac{\partial \Delta t(z)}{\partial z}
+\end{align}
+where $\Delta T(z)$ is the temperature change, $C_0$ is the speed of sound, $K$ is a constant, $\frac{\partial \Delta t(z)}{\partial z}$
+is the \textbf{thermal strain}.
+
+In this homework, we need to finish the following requirements:
+\begin{enumerate}
+	\item Estimate echo time shift in $\mu s$ as a function of depth
+	\item Estimate thermal strain in \% as a function of depth
+\end{enumerate}
+
+\section{Source Code}
+In this zip archive, there are two matlab source code files:
+\begin{enumerate}
+	\item EE6265\_HW1\_106061531.m
+	\item Windows.m
+\end{enumerate}
+"EE6265\_HW1\_106061531.m" is the main flow of this homework. It will use the class \textbf{Windows} in "Windows.m" to create
+an object, which can manage each window and makes our code more elegant, and plot figures with our given parameters.
+
 
 \end{document}
 
