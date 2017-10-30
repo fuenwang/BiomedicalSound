@@ -49,10 +49,10 @@ delta_depth = depth - tmp1;
 delta_delay = delay_sec - tmp2;
 
 figure()
-plot(depth * 1e3, delta_delay ./ delta_depth);
+plot(depth * 1e3, delay_sec * 1e-6);
 title('Strain')
 xlabel('Depth(mm)')
-ylabel('Strain')
+ylabel('Delay(us)')
 % figure()
 % title('$a = \frac{4}{3}$', 'interpreter', 'latex')
 
