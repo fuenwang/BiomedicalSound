@@ -1,12 +1,20 @@
+%
+% EE6265 ??? 106061531 HW1 10/30/2017
+%
+% This file will run the flow to estimate time-shift of signal.
+% There is another file "Windows.m", it will create an object
+% to mantain windows.
+%
+
 clear;
 data = load('FUS_RFData.mat');
 
 pre_full = data.FUS_pre;
 post_full = data.FUS_post;
-fs = data.fs;
-fc = data.fc;
+fs = data.fs * 1e6;
+fc = data.fc * 1e6;
 window_wavelength = 6;
-overlap_ratio = 0;
+overlap_ratio = 0.5;
 
 window_size = round(window_wavelength * (1 / fc) * fs);
 
@@ -29,3 +37,4 @@ while ~final
     t = t + 1;
 end
 delay
+

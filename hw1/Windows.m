@@ -1,3 +1,10 @@
+%
+% EE6265 ??? 106061531 HW1 10/30/2017
+%
+% The class "Windows" will help me get next window
+% in an elegant way.
+%
+
 classdef Windows < handle
     properties
         idx
