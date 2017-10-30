@@ -41,12 +41,19 @@ end
 delay_sec = delay * (1 / fs);
 delay_sec = filter(ones(1, avg_filter_size) / avg_filter_size, 1, delay_sec);
 depth = center_idx * (1 / fs) / 2 * c0;
+strain = diff(delay_sec) ./ diff(depth);
 
 figure()
 plot(depth*1e3, (delay_sec / 2) * 1e6)
 title('Echo-Time Shift')
 xlabel('Depth(mm)')
 ylabel('Delay(us)')
+
+figure()
+plot(depth(1:end-1)*1e3, strain)
+title('Thermal Strain')
+xlabel('Depth(mm)', 'FontSize', 15)
+ylabel('\boldmath{$\frac{\partial \Delta t(z)}{\partial z}$}', 'interpreter', 'latex', 'FontSize', 20)
 
 
 
