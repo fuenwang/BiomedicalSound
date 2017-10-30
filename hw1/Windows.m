@@ -26,7 +26,7 @@ classdef Windows < handle
                 error('overlap ratio > 1');
             end
         end
-        function [pre_frame, post_frame, final] = Next(obj) % Get next frame
+        function [pre_frame, post_frame, center, final] = Next(obj) % Get next frame
             len = length(obj.pre_sig);
             jump = round((1 - obj.ratio) * obj.w_size);
             if obj.final
@@ -36,10 +36,12 @@ classdef Windows < handle
                 pre_frame = obj.pre_sig(obj.idx:end);
                 post_frame = obj.post_sig(obj.idx:end);
                 final = true;
+                center = round((obj.idx + len) / 2);
             else
                 pre_frame = obj.pre_sig(obj.idx:(obj.idx + obj.w_size - 1));
                 post_frame = obj.post_sig(obj.idx:(obj.idx + obj.w_size - 1));
                 final = false;
+                center = round((2 * obj.idx + jump - 1) / 2);
             end
             obj.final = final;
             obj.idx = obj.idx + jump;
