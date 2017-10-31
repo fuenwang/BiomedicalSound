@@ -17,7 +17,8 @@
 \usepackage{hyperref}
 \usepackage{color}
 \usepackage{algorithm}
-%\usepackage{caption}
+\usepackage{caption}
+\captionsetup{skip=0pt}
 \usepackage{algpseudocode}
 \usepackage{multirow}
 \usepackage{subfigure}
@@ -209,10 +210,37 @@ $\Delta t(z)$ is a function of $z$, which means $\Delta t(z)$ will vary at diffe
 pre-signal and post-signal into several frames with certain window size and apply cross-correlation for each pre/post window
 pair. By this way, we can estimate the time shift for each window. For more accurate result, we can upsample the origin signal
 to get more sample points and higher sample rate. In this homework, I upsample the signal to triple origin sample rate
-$3 \times f_s$ and use a moving average filter with size 5 to denoise the echo-time shift.
+($3 \times f_s$) and use a moving average filter with size 5 to denoise the echo-time shift.
 
 In the following section, I will show and explain several results.
 \subsection{Echo-Time Shift}
+In this part, I run experiments with different paramters. Windows size is 2, 6, 10 wavelength, and each combines with different 
+overlap ratio (0, 0.5, 0.75). Figure [\ref{fig:shift-2}, \ref{fig:shift-6}, \ref{fig:shift-10}] show the Echo-Time Shift
+as a function of $z$ for M = 2, 6 and 10, respectively.
+
+In Figure \ref{fig:shift-2}, we can find that the echo-time shift is very unstable. Because the window size is only 2
+wavelength, the small window will be very sensitive to noise. However, it will also preserve more detailed information of
+our signal. Also, same for the overlap ratio. When the ratio is small, the detailed information of signal will be harder
+to captured, while larger ratio can extract the variation of signal, so the change of echo-time shift will be more obvious.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{src/shift_2.pdf}
+    \caption{Echo-Time Shift (M=2)}
+    \label{fig:shift-2}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{src/shift_6.pdf}
+    \caption{Echo-Time Shift (M=6)}
+    \label{fig:shift-6}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{src/shift_10.pdf}
+    \caption{Echo-Time Shift (M=10)}
+    \label{fig:shift-10}
+\end{figure}
 
 \end{document}
 
