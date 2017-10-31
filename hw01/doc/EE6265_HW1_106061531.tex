@@ -254,6 +254,35 @@ choice for this task in homework.
 From the result of Figure [\ref{fig:shift-2}, \ref{fig:shift-6}, \ref{fig:shift-10}], we can find that larger window size and
 smaller overlap ratio will give a more smoothed result, while smaller window size and larger overlap ratio will preserve 
 more detailed information but sensitive to noise.
+\subsection{Thermal Strain}
+In this section, we need to estimate thermal strain $\frac{\partial \Delta t(z)}{\partial z}$. First, we need to convert the 
+echo-time shift into distance and then use difference approximation to calculate partial differential term as shown in 
+Equation \ref{eq:partial}:
+\begin{align}
+    \frac{\partial \Delta t(z)}{\partial z} \approx \frac{diff(\Delta t(z) \cdot \frac{C_0}{2})}{diff(Depth)}
+    \label{eq:partial}
+\end{align}
+Figure [\ref{fig:strain-2}, \ref{fig:strain-6}, \ref{fig:strain-10}] show the Thermal Strain (\%) as a function of $z$ 
+for M = 2, 6 and 10, respectively.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{src/strain_2.pdf}
+    \caption{Thermal Strain (M=2)}
+    \label{fig:strain-2}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{src/strain_6.pdf}
+    \caption{Thermal Strain (M=6)}
+    \label{fig:strain-6}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{src/strain_10.pdf}
+    \caption{Thermal Strain (M=10)}
+    \label{fig:strain-10}
+\end{figure}
 
 \end{document}
 
