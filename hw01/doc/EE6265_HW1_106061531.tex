@@ -183,6 +183,7 @@ For \textbf{Focused Ultrasound Thermal Therapy}, an important technique is to es
 The estimation can be derived by the echo-time shift before and after heating. Moreover, the temperature change can be formula as:
 \begin{align}
 \Delta T(z) = \frac{C_0}{2} \cdot K \cdot \frac{\partial \Delta t(z)}{\partial z}
+\label{eq:temp change}
 \end{align}
 where $\Delta T(z)$ is the temperature change, $C_0$ is the speed of sound, $K$ is a constant, $\frac{\partial \Delta t(z)}{\partial z}$
 is the \textbf{thermal strain}.
@@ -202,6 +203,16 @@ In this zip archive, there are two matlab source code files:
 "EE6265\_HW1\_106061531.m" is the main flow of this homework. It will use the class \textbf{Windows} in "Windows.m" to create
 an object, which can manage each window and makes our code more elegant, and plot figures with our given parameters.
 
+\section{Problems}
+In Equation \ref{eq:temp change}, the term $\Delta t(z)$ is the echo-time shift before and after ultrasound heating. Because 
+$\Delta t(z)$ is a function of $z$, which means $\Delta t(z)$ will vary at different depth. As a result, we can divide the 
+pre-signal and post-signal into several frames with certain window size and apply cross-correlation for each pre/post window
+pair. By this way, we can estimate the time shift for each window. For more accurate result, we can upsample the origin signal
+to get more sample points and higher sample rate. In this homework, I upsample the signal to triple origin sample rate
+$3 \times f_s$ and use a moving average filter with size 5 to denoise the echo-time shift.
+
+In the following section, I will show and explain several results.
+\subsection{Echo-Time Shift}
 
 \end{document}
 

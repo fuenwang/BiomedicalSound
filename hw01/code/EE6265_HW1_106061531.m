@@ -6,7 +6,7 @@
 % to mantain windows.
 %
 
-clear;
+%clear;
 data = load('FUS_RFData.mat');
 
 pre_full = data.FUS_pre;
@@ -15,8 +15,9 @@ fs = data.fs * 1e6;
 fc = data.fc * 1e6;
 c0 = data.c0 * 1e-3 / 1e-6;
 
-window_wavelength = 2;
-overlap_ratio = 0.5;
+window_wavelength = 10;
+overlap_ratio = 0.75;
+
 resample_factor = 3;
 avg_filter_size = 5;
 
@@ -43,6 +44,7 @@ delay_sec = filter(ones(1, avg_filter_size) / avg_filter_size, 1, delay_sec);
 depth = center_idx * (1 / fs) / 2 * c0;
 strain = diff(delay_sec) ./ diff(depth);
 
+%{
 figure()
 plot(depth*1e3, (delay_sec / 2) * 1e6)
 title('Echo-Time Shift')
@@ -54,7 +56,7 @@ plot(depth(1:end-1)*1e3, strain)
 title('Thermal Strain')
 xlabel('Depth(mm)', 'FontSize', 15)
 ylabel('\boldmath{$\frac{\partial \Delta t(z)}{\partial z}$}', 'interpreter', 'latex', 'FontSize', 20)
-
+%}
 
 
 
