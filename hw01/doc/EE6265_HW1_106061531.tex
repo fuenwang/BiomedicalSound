@@ -242,6 +242,19 @@ to captured, while larger ratio can extract the variation of signal, so the chan
     \label{fig:shift-10}
 \end{figure}
 
+In Figure \ref{fig:shift-6}, the result becomes much more smoothed than Figure \ref{fig:shift-2}. Because we have a larger 
+window size, it will be more robust for noise but also loss more detailed information. Similar to Figure \ref{fig:shift-2}, 
+the result gets more smoothed when applying larger overlap ratio.
+
+In Figure \ref{fig:shift-10}, we get a more smoothed result than Figure \ref{fig:shift-6} because the window size is larger too.
+However, I think 10 wavelength window size is not a suitable number for such task because the result is \textbf{too smoothed},
+which losses too much information of signal and we cannot analyze it. As a result, I think 6 wavelength window size is the best 
+choice for this task in homework.
+
+From the result of Figure [\ref{fig:shift-2}, \ref{fig:shift-6}, \ref{fig:shift-10}], we can find that larger window size and
+smaller overlap ratio will give a more smoothed result, while smaller window size and larger overlap ratio will preserve 
+more detailed information but sensitive to noise.
+
 \end{document}
 
 
