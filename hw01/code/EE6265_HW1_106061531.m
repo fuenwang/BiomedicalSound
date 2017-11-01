@@ -12,7 +12,7 @@
 %
 
 clear;
-window_wavelength = 2;
+window_wavelength = 10;
 overlap_ratio = 0.75;
 resample_factor = 10;
 
