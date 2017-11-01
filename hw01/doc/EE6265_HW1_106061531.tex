@@ -209,8 +209,28 @@ In Equation \ref{eq:temp change}, the term $\Delta t(z)$ is the echo-time shift 
 $\Delta t(z)$ is a function of $z$, which means $\Delta t(z)$ will vary at different depth. As a result, we can divide the 
 pre-signal and post-signal into several frames with certain window size and apply cross-correlation for each pre/post window
 pair. By this way, we can estimate the time shift for each window. For more accurate result, we can upsample the origin signal
-to get more sample points and higher sample rate. In this homework, I upsample the signal to triple origin sample rate
-($3 \times f_s$) and use a moving average filter with size 5 to denoise the echo-time shift.
+to get more sample points and higher sample rate. In this homework, I upsample the signal to 10x origin sample rate
+($10 \times f_s$) and use a moving average filter to denoise the echo-time shift.
+
+Because sliding-window is somehow like sampling, so we can treat it as down-sample process, which will reduce sampling rate.
+From this assumption, we can find a new sampling rate by
+\begin{align*}
+    f_s' = \frac{\text{number of windows}}{length(signal)} \cdot f_s
+\end{align*}
+After we have new $f_s$, we can treat echo-time shift as a signal and use FFT to analyze it. Figure \ref{fig:fft-non} shows the
+FFT result. In this figure, the highest peak is located at $\pm 4.398 \cdot 10^4$ Hz, which is the part to tell us where
+is the focused point of ultrasound. As a result, now our task is to design a moving average filter which cut-off frequency
+is $\pm 4.398 \cdot 10^4$ Hz. By the cut-off frequency formula:
+\begin{align*}
+    \frac{f_{cut}}{f_s} = \frac{0.442947}{\sqrt{N^2 - 1}}
+\end{align*}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{src/fft_non.pdf}
+    \caption{FFT of Echo-Time Shift (non-smoothed)}
+    \label{fig:fft-non}
+\end{figure}
+
 
 In the following section, I will show and explain several results.
 \subsection{Echo-Time Shift}
