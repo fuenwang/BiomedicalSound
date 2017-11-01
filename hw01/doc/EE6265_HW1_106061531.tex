@@ -224,7 +224,7 @@ is $\pm 4.398 \cdot 10^4$ Hz. By the cut-off frequency formula
 \begin{align*}
     \frac{f_{cut}}{f_s} = \frac{0.442947}{\sqrt{N^2 - 1}}
 \end{align*}
-we can find the filter size ($N$) to design appropriate moving average filter. Figure \ref{fig:fft} shows the result FFT
+we can find the filter size ($N$) to design appropriate moving average filter. Figure \ref{fig:fft} shows the FFT
 result after applying moving average filter.
 
 \begin{figure}[H]
@@ -319,6 +319,12 @@ I think (M=10, N=0.75) is the best parameters in this homework.
     \caption{Thermal Strain (M=10)}
     \label{fig:strain-10}
 \end{figure}
+
+\section{Conclusion}
+In this homework, we have implemented a flow to estimate thermal strain which can be used to estimate temperature change in FUS.
+Although sliding-window method is not difficult to implement, it is very hard to filter the noise and choose appropriate
+parameters. For productizing this method, the parameters must be choosen carefully and it needs a lot of data and experiments
+to find it.
 
 \end{document}
 

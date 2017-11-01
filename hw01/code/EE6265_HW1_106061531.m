@@ -5,21 +5,25 @@
 % There is another file "Windows.m", it will create an object
 % to mantain windows.
 %
+% There are three parameters you can modify, "window_wavelength",
+% "overlap_ratio" and "resample_factor".
+% "window_wavelength" and "overlap_ratio" is M and N in homework,
+% "resample_factor" is the upsample scale of origin sample rate.
+%
 
-%clear;
+clear;
+window_wavelength = 2;
+overlap_ratio = 0.75;
+resample_factor = 10;
+
+
 
 data = load('FUS_RFData.mat');
-
 pre_full = data.FUS_pre;
 post_full = data.FUS_post;
 fs = data.fs * 1e6;
 fc = data.fc * 1e6;
 c0 = data.c0 * 1e-3 / 1e-6;
-
-window_wavelength = 2;
-overlap_ratio = 0.75;
-
-resample_factor = 10;
 
 pre_full = interp(pre_full, resample_factor);
 post_full = interp(post_full, resample_factor);
@@ -33,11 +37,6 @@ delay = zeros(1, round(length(pre_full) / window_size));
 center_idx = zeros(1, round(length(pre_full) / window_size));
 while ~final
     [pre, post, center, final] = window.Next();
-%     if t == 1
-%         pre(end - round(window_size * overlap_ratio): end)
-%     elseif t == 2
-%         pre(1:round(window_size * overlap_ratio))
-%    end
     [val, lag] = xcorr(pre, post);
     [~, idx] = max(val);
     delay(t+1) = lag(idx);
@@ -47,7 +46,6 @@ end
 new_fs = length(delay) / length(pre_full) * fs;
 cutoff =  4.398 * 1e4;
 avg_filter_size = round(sqrt((0.442947 * new_fs / cutoff)^2 + 1));
-%avg_filter_size = 30;
 delay_sec = delay * (1 / fs);
 delay_sec = filter(ones(1, avg_filter_size) / avg_filter_size, 1, delay_sec);
 depth = center_idx * (1 / fs) / 2 * c0;
