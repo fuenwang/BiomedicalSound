@@ -41,7 +41,7 @@ classdef Windows < handle
                 pre_frame = obj.pre_sig(obj.idx:(obj.idx + obj.w_size - 1));
                 post_frame = obj.post_sig(obj.idx:(obj.idx + obj.w_size - 1));
                 final = false;
-                center = round((2 * obj.idx + jump - 1) / 2);
+                center = round(obj.idx + obj.w_size / 2);
             end
             obj.final = final;
             obj.idx = obj.idx + jump;
