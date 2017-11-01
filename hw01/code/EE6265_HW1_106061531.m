@@ -53,32 +53,32 @@ delay_sec = filter(ones(1, avg_filter_size) / avg_filter_size, 1, delay_sec);
 depth = center_idx * (1 / fs) / 2 * c0;
 strain = diff(delay_sec * c0 / 2) ./ diff(depth);
 
-x = fft(delay_sec - mean(delay_sec));
-x = fftshift(x);
-side = (length(x) - 1) / 2;
-f_axis = (-side:side) / 2 / side * new_fs;
-fig = figure();
-plot(f_axis, abs(x), 'LineWidth', 1);
-title('FFT of Echo-Time Shift(smoothed)')
-xlabel('Hz')
-ylabel('Magnitude')
-fig.PaperPositionMode = 'auto';
-fig_pos = fig.PaperPosition;
-fig.PaperSize = [fig_pos(3) fig_pos(4)];
-print(fig, '../doc/src/fft.pdf', '-dpdf')
-error
+% x = fft(delay_sec - mean(delay_sec));
+% x = fftshift(x);
+% side = (length(x) - 1) / 2;
+% f_axis = (-side:side) / 2 / side * new_fs;
+% fig = figure();
+% plot(f_axis, abs(x), 'LineWidth', 1);
+% title('FFT of Echo-Time Shift(smoothed)')
+% xlabel('Hz')
+% ylabel('Magnitude')
+% fig.PaperPositionMode = 'auto';
+% fig_pos = fig.PaperPosition;
+% fig.PaperSize = [fig_pos(3) fig_pos(4)];
+% print(fig, '../doc/src/fft.pdf', '-dpdf')
+% error
 
-% figure()
-% plot(depth*1e3, (delay_sec / 2) * 1e6)
-% title('Echo-Time Shift')
-% xlabel('Depth(mm)')
-% ylabel('Delay(us)')
-% %error
-% figure()
-% plot(depth(1:end-1)*1e3, strain * 100)
-% title('Thermal Strain(%)')
-% xlabel('Depth(mm)', 'FontSize', 15)
-% ylabel('\boldmath{$\frac{\partial \Delta t(z)}{\partial z}$ (\%)}', 'interpreter', 'latex', 'FontSize', 20)
+figure()
+plot(depth*1e3, (delay_sec / 1) * 1e6)
+title('Echo-Time Shift')
+xlabel('Depth(mm)')
+ylabel('Delay(us)')
+%error
+figure()
+plot(depth(1:end-1)*1e3, strain * 100)
+title('Thermal Strain(%)')
+xlabel('Depth(mm)', 'FontSize', 15)
+ylabel('\boldmath{$\frac{\partial \Delta t(z)}{\partial z}$ (\%)}', 'interpreter', 'latex', 'FontSize', 20)
 
 
 
