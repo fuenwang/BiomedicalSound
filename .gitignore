@@ -5,3 +5,5 @@
 *.dvi
 *.log
 *.out
+*.bcf
+*.xml
