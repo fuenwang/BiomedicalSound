@@ -145,7 +145,7 @@ image(((1:Nstep)-(Nstep+1)/2)*dx*1000, (tstart+(0:size(rf_data,1))/fs)*soundv/2*
 colormap(gray(40))
 axis image
 xlabel('Lateral position (mm)')
-ylabel('Depth (mm)')
+ylabel('Depth (mm)') 
 %saveFig(fig, name);
 if flag  
     % free space for apertures
