@@ -7,6 +7,7 @@
 %                      The possibilities are:
 %                          rect     - information about rectangular elements
 %                          tri      - information about triangular elements
+%                          lin      - information about line bounded elements
 %                          focus    - focus time line
 %                          apo      - apodization time line
 %
@@ -17,7 +18,7 @@
 %     Returns the delay values for this aperture. See the manual for the
 %     individual values content in the user's guide.
 %
-%  Version 1.03, June 29, 1998 by Joergen Arendt Jensen
+%  Version 1.1, November 29, 2001 by Joergen Arendt Jensen
 
 function data = xdc_get (Th, info_type)
 
@@ -31,6 +32,8 @@ function data = xdc_get (Th, info_type)
     info = 1;
   elseif strcmp(info_type, 'tri')
     info = 2;
+  elseif strcmp(info_type, 'lin')
+    info = 3;
   elseif strcmp(info_type, 'focus')
     info = 4;
   elseif strcmp(info_type, 'apo')

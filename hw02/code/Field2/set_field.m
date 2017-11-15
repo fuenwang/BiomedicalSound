@@ -28,6 +28,12 @@
 %   c                     Set the speed of sound in m/s.
 %   fs                    Set the sampling frequency.
 %
+%  Variables used for non-linear imaging:
+%
+%   z                     Characteristic acoustic impedance of the medium in kg/[m^2 s]
+%   dz                    Step for propagating the pulse in m
+%   BdivA                 The B/A parameter
+%                   
 %  Return:   nothing.
 %
 %  Example:  Set the attenuation to 1.5 dB/cm, 0.5 dB/[MHz cm] around
@@ -41,7 +47,7 @@
 %  Note that the frequency independent and frequency dependent attenuation
 %  should normally agree, so that  Freq_att*att_f0 =  att.
 %
-%  Version 1.7, April 17, 2002 by Joergen Arendt Jensen
+%  Version 1.8, August 1, 2002 by Joergen Arendt Jensen
 
 function res = set_field (option_name, value)
 

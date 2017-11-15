@@ -55,8 +55,8 @@ ratio_amp(:, :) = all_mean_amp ./ all_std_amp;
 ratio_intensity(:, :) = all_mean_intensity ./ all_std_intensity;
 
 % plot ratio
-if fig_flag
-    for i = 1:length(N_lst)
+for i = 1:length(N_lst)
+    if fig_flag
         N_s = sprintf('%d', N_lst(i));
         fig = figure();
         subplot('211');
