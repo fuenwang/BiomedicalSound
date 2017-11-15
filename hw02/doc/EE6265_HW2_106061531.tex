@@ -199,6 +199,8 @@ Figure \ref{fig:hist-origin} shows the historgram of amplitude and intensity of 
 	\caption{Histogram of amplitude (top) and intensity (bottom) of origin array}
 	\label{fig:hist-origin}
 \end{figure}
+In Figure \ref{fig:hist-origin}, we can see the distribution of amplitude is exactly uniform distribution. Because intensity is $amplitude^2$ and 
+value between [0, 1] will decay exponentially, so the distribution will move left.
 
 \subsection{Histogram and Ratio of new array}
 Now we create an new array with size \textbf{N (= 10000, 5000, 2000, 1000, 500)}, which value is the sum of \textbf{M (= 1, 2, 5, 10, 20)} consecutive data:
@@ -305,12 +307,12 @@ M.
 \end{figure}
 
 \subsection{Repeat (a) and (b) with phase distribution [0, $\pi$]}
-\ref{fig:hist-origin-pi}, 
+Now we change the phase distribution of origin array from [0, $2\pi$] to [0, $\pi$]. Figure \ref{fig:hist-origin-pi} shows the histogram of 
+amplitude and intensity of origin array with phase distribution [0, $\pi$]. 
 Figure [\ref{fig:hist-500-1-pi}, \ref{fig:hist-500-10-pi}, \ref{fig:hist-1000-1-pi}, \ref{fig:hist-1000-10-pi}, \ref{fig:hist-2000-1-pi}, 
 \ref{fig:hist-2000-10-pi}, \ref{fig:hist-5000-1-pi}, \ref{fig:hist-5000-10-pi}, \ref{fig:hist-10000-1-pi}, \ref{fig:hist-10000-10-pi}]
-
-Figure
-[\ref{fig:ratio-500-pi}, \ref{fig:ratio-1000-pi}, \ref{fig:ratio-2000-pi}, \ref{fig:ratio-5000-pi}, \ref{fig:ratio-10000-pi}]
+show histogram for different N and M.  Figure [\ref{fig:ratio-500-pi}, \ref{fig:ratio-1000-pi}, \ref{fig:ratio-2000-pi}, \ref{fig:ratio-5000-pi}, 
+\ref{fig:ratio-10000-pi}] show the ratio.
 
 \begin{figure}[H]
 	\centering
@@ -410,6 +412,9 @@ Figure
 	\caption{Ratio of mean and standard deviation (N = 10000, phase[0, $\pi$])}
 	\label{fig:ratio-10000-pi}
 \end{figure}
+
+
+
 \end{document}
 
 

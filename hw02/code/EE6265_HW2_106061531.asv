@@ -136,54 +136,30 @@ for i = 1:length(N_lst)
 end
 
 % plot smooth_later for problem (d) 5 x 2 subplot
-if fig_flag
-    fig = figure();
-    for i = 1:length(N_lst)
-        left_id = i * 2 - 1;
-        right_id = left_id + 1;
-
+for i = 1:length(N_lst)
+    if fig_flag
+        right_id = i + 5
+        left_id = 
+        fig = figure();
+        
         subplot(5, 2, left_id);
         fig_title = sprintf('N = %d (Smoothed Amplitude)', N_lst(i));
-        plot(M_lst, ratio_amp_smooth_later(i, :));
+        plot(M_lst, ratio_amp_smooth_later);
         title(fig_title)
         xlabel('M')
         ylabel('ratio')
         
         subplot(5, 2, right_id);
         fig_title = sprintf('N = %d (Smoothed Intensity)', N_lst(i));
-        plot(M_lst, ratio_amp_smooth_later(i, :));
-        title(fig_title)
-        xlabel('M')
-        ylabel('ratio')
-    end
-    set(fig, 'Position', [0 0 800 1080]);
-    name = sprintf('%s/ratio_smooth_later.pdf', path);
-    saveFig(fig, name);
-end
-
-% plot smooth_first for problem (e) 5 x 2 subplot
-if fig_flag
-    fig = figure();
-    for i = 1:length(N_lst)
-        left_id = i * 2 - 1;
-        right_id = left_id + 1;
-
-        subplot(5, 2, left_id);
-        fig_title = sprintf('N = %d (Amplitude of smoothed data)', N_lst(i));
-        plot(M_lst, ratio_amp_smooth_first(i, :));
+        plot(M_lst, ratio_amp_smooth_later);
         title(fig_title)
         xlabel('M')
         ylabel('ratio')
         
-        subplot(5, 2, right_id);
-        fig_title = sprintf('N = %d (Intensity of smoothed data)', N_lst(i));
-        plot(M_lst, ratio_amp_smooth_first(i, :));
-        title(fig_title)
-        xlabel('M')
-        ylabel('ratio')
+        name = sprintf('%s/ratio_%d_smooth_later.pdf', path, N_lst(i));
+        saveFig(fig, fig_path);
     end
-    set(fig, 'Position', [0 0 800 1080]);
-    name = sprintf('%s/ratio_smooth_first.pdf', path);
-    saveFig(fig, name);
 end
+
+
 
