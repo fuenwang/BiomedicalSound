@@ -413,7 +413,108 @@ show histogram for different N and M.  Figure [\ref{fig:ratio-500-pi}, \ref{fig:
 	\label{fig:ratio-10000-pi}
 \end{figure}
 
+\subsection{Smooth amplitude and intensity}
+Now we will use a moving average filter [0.5, 0.5] to smooth the amplitude and intensity, which is a post-processing. 
+Figure \ref{fig:ratio_smooth_later} show the ratio as a function of M for different N.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = \textwidth]{src/2pi/ratio_smooth_later.jpg}
+	\caption{Ratio as function of M with smoothed amplitude and intensity}
+	\label{fig:ratio_smooth_later}
+\end{figure}
 
+\subsection{Smooth new array}
+Now we will try to use the same filter to smooth new array obtained from (b), which is a pre-processing.
+Figure \ref{fig:ratio_smooth_first} show the ratio as a function of M for different N.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = \textwidth]{src/2pi/ratio_smooth_first.jpg}
+	\caption{Ratio as function of M with smoothed data array}
+	\label{fig:ratio_smooth_first}
+\end{figure}
+
+\section{Part \RN{2}}
+In this part, we will use Matlab tool \textbf{Field2} to simulate phantom scattering.
+
+\subsection{Ratio of two area}
+Now we should calculate the ratio of mean to the standard deviation for amplitude and intensity. To divide the image into
+two part, I manually crop 2 area from the image which one is lighter and the other is darker. The ratio is summarized as Table \ref{tab:ratio}:
+
+\begin{table}[H]
+  \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+          & Experimental Ratio & Theoretical Ratio \bigstrut\\
+    \hline
+    Amplitude (higher scattering inclusion) &   1.6517    &  \bigstrut\\
+    \hline
+    Intensity (higher scattering inclusion) &   0.8688    &  \bigstrut\\
+    \hline
+    Amplitude (speckle background) &   1.7776    &  \bigstrut\\
+    \hline
+    Intensity (speckle background) &   0.8742    &  \bigstrut\\
+    \hline
+    \end{tabular}%
+  \caption{Ratio for lighter/darker area}
+  \label{tab:ratio}%
+\end{table}%
+
+\subsection{Contrast of two area}
+For the two area, we will calculate their contrast by following formula:
+$$
+	contrast = \abs{I_1 - I_2}
+$$
+where $I_1$ and $I_2$ are mean value in dB. Table \ref{tab:contrast} show the result.
+\begin{table}[H]
+  \centering
+  
+    \begin{tabular}{|c|c|c|}
+    \hline
+          & Experimental Contrast & Theoretical Contrast \bigstrut\\
+    \hline
+    Amplitude & 16.9036 & 20 \bigstrut\\
+    \hline
+    Intensity & 33.8073 & 40 \bigstrut\\
+    \hline
+    \end{tabular}%
+    \caption{Contrast of amplitude/intensity}
+  \label{tab:contrast}%
+\end{table}%
+Because the contrast of intensity is $20 * \log(amplitude^2) = 2 * 20 log(amplitude)$, so the value should be double than amplitude.
+
+\subsection{Reduce the contrast}
+Reduce contrast value until we cannot tell which part is lighter or darker in image. Figure 
+[\ref{fig:contrast-20}, \ref{fig:contrast-10}, \ref{fig:contrast-7}, \ref{fig:contrast-5}] show result of contrast [20, 10, 7, 5], respectively.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{src/contrast_20.pdf}
+	\caption{Contrast = 20}
+	\label{fig:contrast-20}
+\end{figure}
+When contrast = 20 (Figure \ref{fig:contrast-20}), the border of lighter and darker area is clear to tell.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{src/contrast_10.pdf}
+	\caption{Contrast = 10}
+	\label{fig:contrast-10}
+\end{figure}
+When contrast = 10 (Figure \ref{fig:contrast-10}), the intensity of two area is close but we can see the border clearly.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{src/contrast_7.pdf}
+	\caption{Contrast = 7}
+	\label{fig:contrast-7}
+\end{figure}
+When contrast = 7 (Figure \ref{fig:contrast-7}), the intensity of two area is very close and border is very unclear.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{src/contrast_5.pdf}
+	\caption{Contrast = 5}
+	\label{fig:contrast-5}
+\end{figure}
+When contrast = 5 (Figure \ref{fig:contrast-5}), the border totally disappear.
+
+As a result, I think the \textbf{minimum detectable contrast is 7 dB}.
 
 \end{document}
 
