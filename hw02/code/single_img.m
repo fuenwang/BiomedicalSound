@@ -7,7 +7,7 @@
 % start up the Field2 simulation system
 clear;
 addpath('./Field2')
-flag = true;
+flag = false;
 if flag
     field_init(0)
 
@@ -109,21 +109,30 @@ envelope_darker = envelope(320:954,50:100);
 intensity_lighter = intensity(1350:1800,65:85);
 intensity_darker = intensity(320:954,50:100);
 
-mean_lighter = mean(envelope_lighter(:));
-std_lighter = std(envelope_lighter(:));
-ratio_lighter = mean_lighter / std_lighter;
+mean_amp_lighter = mean(envelope_lighter(:));
+std_amp_lighter = std(envelope_lighter(:));
+ratio_amp_lighter = mean_amp_lighter / std_amp_lighter;
 
-mean_darker = mean(envelope_darker(:));
-std_darker = std(envelope_darker(:));
-ratio_darker = mean_darker / std_darker;
+mean_intensity_lighter = mean(intensity_lighter(:));
+std_intensity_lighter = std(intensity_lighter(:));
+ratio_intensity_lighter = mean_intensity_lighter / std_intensity_lighter;
+
+mean_amp_darker = mean(envelope_darker(:));
+std_amp_darker = std(envelope_darker(:));
+ratio_amp_darker = mean_amp_darker / std_amp_darker;
+
+mean_intensity_darker = mean(intensity_darker(:));
+std_intensity_darker = std(intensity_darker(:));
+ratio_intensity_darker = mean_intensity_darker / std_intensity_darker;
+
 
 envelope_lighter_dB = 20*log10(envelope_lighter);
 envelope_darker_dB = 20*log10(envelope_darker);
 intensity_lighter_dB = 20*log10(intensity_lighter);
 intensity_darker_dB = 20*log10(intensity_darker);
 
-contrast = abs(mean(intensity_lighter_dB(:)) - mean(intensity_darker_dB(:)));
-%contrast = abs(mean(envelope_lighter_dB(:)) - mean(envelope_darker_dB(:)));
+%contrast = abs(mean(intensity_lighter_dB(:)) - mean(intensity_darker_dB(:)));
+contrast = abs(mean(envelope_lighter_dB(:)) - mean(envelope_darker_dB(:)));
 contrast
 
 envelope_dB = 20*log10(envelope/max(max(envelope)));
@@ -137,8 +146,8 @@ colormap(gray(40))
 axis image
 xlabel('Lateral position (mm)')
 ylabel('Depth (mm)')
-saveFig(fig, name);
-if flag
+%saveFig(fig, name);
+if flag  
     % free space for apertures
     xdc_free(Th);
     field_end
