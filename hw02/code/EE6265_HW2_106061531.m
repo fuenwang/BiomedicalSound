@@ -13,6 +13,24 @@ origin_phase = rand(1, 10000) * 2 * pi;
 origin_data = origin_amp .* exp(1i * origin_phase);
 origin_intensity = origin_amp.^2;
 
+if fig_flag
+    fig = figure();
+    subplot('211')
+    histogram(origin_amp);
+    tmp = sprintf('Amplitude Histogram(origin)');
+    title(tmp)
+    xlabel('value')
+    ylabel('histogram')
+    subplot('212')
+    histogram(origin_intensity);
+    tmp = sprintf('Intensity Histogram(origin)');
+    title(tmp)
+    xlabel('value')
+    ylabel('histogram')
+    fig_name = sprintf('%s/hist_origin.pdf', path);
+    saveFig(fig, fig_name);
+end
+
 all_mean_amp = zeros(length(N_lst), length(M_lst));
 all_std_amp = zeros(length(N_lst), length(M_lst));
 all_mean_intensity = zeros(length(N_lst), length(M_lst));
