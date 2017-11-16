@@ -305,7 +305,8 @@ show histogram for different N and M.  Figure \ref{fig:ratio-pi} show the ratio.
 
 \subsection{Smooth amplitude and intensity}
 Now we will use a moving average filter [0.5, 0.5] to smooth the amplitude and intensity, which is a post-processing. 
-Figure \ref{fig:ratio_smooth_later} show the ratio as a function of M for different N.
+Figure \ref{fig:ratio_smooth_later} show the ratio as a function of M for different N. In this figure, the line becomes much more stable than
+Figure \ref{fig:ratio}. This is because moving average filter will suppress noise of the two array.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.6\textwidth]{src/2pi/ratio_smooth_later.pdf}
@@ -315,7 +316,8 @@ Figure \ref{fig:ratio_smooth_later} show the ratio as a function of M for differ
 
 \subsection{Smooth new array}
 Now we will try to use the same filter to smooth new array obtained from (b), which is a pre-processing.
-Figure \ref{fig:ratio_smooth_first} show the ratio as a function of M for different N.
+Figure \ref{fig:ratio_smooth_first} show the ratio as a function of M for different N. In this figure, the line becomes much more stable than
+Figure \ref{fig:ratio}. This is because moving average filter will suppress noise of the data array and its mean and std will be more stable.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.6\textwidth]{src/2pi/ratio_smooth_first.pdf}
