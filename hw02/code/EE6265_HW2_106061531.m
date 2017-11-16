@@ -1,28 +1,30 @@
 %
 % EE6265 Fu-En Wang 106061531 HW2 11/14/2017
 %
+
 clear;
 close all;
 N_lst = [500 1000 2000 5000 10000];
 M_lst = [20 10 5 2 1];
-path = '../doc/src/pi';
+path = '../doc/src/2pi';
 fig_flag = true;
+bins = 20;
 
 origin_amp = rand(1, 10000);
-origin_phase = rand(1, 10000) * 1 * pi;
+origin_phase = rand(1, 10000) * 2 * pi;
 origin_data = origin_amp .* exp(1i * origin_phase);
 origin_intensity = origin_amp.^2;
 
 if fig_flag
     fig = figure();
     subplot('211')
-    histogram(origin_amp);
+    histogram(origin_amp, bins);
     tmp = sprintf('Amplitude Histogram(origin)');
     title(tmp)
     xlabel('value')
     ylabel('histogram')
     subplot('212')
-    histogram(origin_intensity);
+    histogram(origin_intensity, bins);
     tmp = sprintf('Intensity Histogram(origin)');
     title(tmp)
     xlabel('value')
@@ -88,13 +90,13 @@ for i = 1:length(N_lst)
     if fig_flag
         fig = figure();
         subplot('211')
-        histogram(new_amp);
+        histogram(new_amp, bins);
         tmp = sprintf('Amplitude Histogram(N = %d, M = %d)', N, M);
         title(tmp)
         xlabel('value')
         ylabel('histogram')
         subplot('212')
-        histogram(new_intensity);
+        histogram(new_intensity, bins);
         tmp = sprintf('Intensity Histogram(N = %d, M = %d)', N, M);
         title(tmp)
         xlabel('value')

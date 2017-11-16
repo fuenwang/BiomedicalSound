@@ -1,3 +1,7 @@
+%
+% EE6265 Fu-En Wang 106061531 HW2 11/14/2017
+%
+
 function saveFig(fig, path)
     fig.PaperPositionMode = 'auto';
     fig_pos = fig.PaperPosition;
