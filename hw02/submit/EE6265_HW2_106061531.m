@@ -6,7 +6,7 @@ clear;
 close all;
 N_lst = [500 1000 2000 5000 10000];
 M_lst = [20 10 5 2 1];
-path = '../doc/src/2pi';
+path = '.';
 fig_flag = true;
 bins = 20;
 
