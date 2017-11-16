@@ -336,25 +336,30 @@ two part, I manually crop 2 area from the image which one is lighter and the oth
     \hline
           & Experimental Ratio & Theoretical Ratio \bigstrut\\
     \hline
-    Amplitude (higher scattering inclusion) &   1.6517    &  \bigstrut\\
+    Amplitude (higher scattering inclusion) &   1.6517    &  1.32  \bigstrut\\
     \hline
-    Intensity (higher scattering inclusion) &   0.8688    &  \bigstrut\\
+    Intensity (higher scattering inclusion) &   0.8688    &  0.71 \bigstrut\\
     \hline
-    Amplitude (speckle background) &   1.7776    &  \bigstrut\\
+    Amplitude (speckle background) &   1.7776    &   1.32 \bigstrut\\
     \hline
-    Intensity (speckle background) &   0.8742    &  \bigstrut\\
+    Intensity (speckle background) &   0.8742    &  0.71 \bigstrut\\
     \hline
     \end{tabular}%
   \caption{Ratio for lighter/darker area}
   \label{tab:ratio}%
 \end{table}%
+The theoretical value is the ratio of mean and standard deviation of a absolute gaussian distribution. Because higher scattering inclusion
+is just multiplying a scalar to origin gaussian distribution according to \textbf{cyst\_phantom.m}, 
+the ratio shouldn't change, which is a property of gaussian distribution.
+From Table \ref{tab:ratio}, experimental value is not going too far away from theoretical value I think.
 
 \subsection{Contrast of two area}
 For the two area, we will calculate their contrast by following formula:
 $$
 	contrast = \abs{I_1 - I_2}
 $$
-where $I_1$ and $I_2$ are mean value in dB. Table \ref{tab:contrast} show the result.
+where $I_1$ and $I_2$ are mean value in dB. Table \ref{tab:contrast} and Table \ref{tab:std} show the result of contrast and standard 
+deviation, respectively.
 \begin{table}[H]
   \centering
   
@@ -362,15 +367,30 @@ where $I_1$ and $I_2$ are mean value in dB. Table \ref{tab:contrast} show the re
     \hline
           & Experimental Contrast & Theoretical Contrast \bigstrut\\
     \hline
-    Amplitude & 16.9036 & 20 \bigstrut\\
+    Amplitude & 16.9036 & 10 \bigstrut\\
     \hline
-    Intensity & 33.8073 & 40 \bigstrut\\
+    Intensity & 33.8073 & 20 \bigstrut\\
     \hline
     \end{tabular}%
     \caption{Contrast of amplitude/intensity}
   \label{tab:contrast}%
 \end{table}%
-Because the contrast of intensity is $20 * \log(amplitude^2) = 2 * 20 log(amplitude)$, so the value should be double than amplitude.
+\begin{table}[H]
+  \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+          & \multicolumn{1}{l|}{ Inclusion } & \multicolumn{1}{l|}{Background} \bigstrut\\
+    \hline
+    std   & 6.3   & 5.6 \bigstrut\\
+    \hline
+    \end{tabular}%
+    \caption{Standard Deviation}
+  \label{tab:std}%
+\end{table}%
+
+Because the contrast of intensity is $20 * \log(amplitude^2) = 2 * 20 log(amplitude)$, so the value should be double than amplitude. However, this
+also means error in amplitude will also be double for intensity. The error in amplitude is about 7 dB which is a little large I think, 
+while error of intensity increase to 14 dB.
 
 \subsection{Reduce the contrast}
 Reduce contrast value until we cannot tell which part is lighter or darker in image. Figure 
@@ -427,6 +447,10 @@ Figure [\ref{fig:radius-25}, \ref{fig:radius-27}, \ref{fig:radius-30}] show the 
 	\caption{Diameter = 6.0mm}
 	\label{fig:radius-30}
 \end{figure}
+For a larger as in Figure \ref{fig:radius-30}, the border is a little more clear than the origin one in Figure \ref{fig:radius-25}. I think the 
+reason is that when cysts' diameter is larger, the cross-sectional area of cyst will get larger and this will increase the probability of 
+reflecting ultrasound back to sensor. So the border will be more clear.
+
 
 \subsection{Periodically Located Scatterers}
 The origin cysts is distributed uniformly. Now we make it uniformly located at a grid map and grid size is [1, 2, 10] wavelength.
@@ -449,10 +473,13 @@ Figure [\ref{fig:wave-1}, \ref{fig:wave-2}, \ref{fig:wave-10}] show the result o
 	\caption{10 Wavelength}
 	\label{fig:wave-10}
 \end{figure}
+From Figure \ref{fig:wave-1} to \ref{fig:wave-10}, the quality become poorer and poorer. The reason is that there are less numbers of cysts in
+phantom, so the total energy sensor get from reflection is smaller than original one. When distance is large enough as in 
+Figure \ref{fig:wave-10}, we can even see the grid distribution of cysts.
 
 \subsection{RF A-line spectrum comparison}
 Now let's see the spectrum change from original tissue-mimicking phantom to phantom in (e). Figure \ref{fig:aline-origin} and 
-\ref{fig:aline-e} show spectrum of tissue-mimicking phantom and phantom in (e), respectively.
+\ref{fig:aline-e} show spectrum of tissue-mimicking phantom and phantom of 2 wavelength in (e) for one sampling line, respectively.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.6\textwidth]{src/spect_line_ori.pdf}
@@ -462,10 +489,13 @@ Now let's see the spectrum change from original tissue-mimicking phantom to phan
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.6\textwidth]{src/spect_line.pdf}
-	\caption{Phantom in (e)}
+	\caption{Phantom with 2 wavelength in (e)}
 	\label{fig:aline-e}
 \end{figure}
-
+The most obvious difference between Figure \ref{fig:aline-origin} and \ref{fig:aline-e} is that in Figure \ref{fig:aline-e} there is a 
+small peak attached at the side of highest peak, which is located at about 2608 Hz. Because the grid distance is 2 wavelength which is 
+about $8.46 * 10^{-4}$ m, in another words, 1182 Hz. As a result, the ratio of frequency corresponding to the small peak and 1182 Hz should be
+an integer. The experimental ratio is $\frac{2608}{1182} \approx 2.2$, which is close to 2.
 
 \end{document}
 

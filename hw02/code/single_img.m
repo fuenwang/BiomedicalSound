@@ -1,8 +1,6 @@
-%  Simulation of  Single Crystal B-mode imaging 
-%		Note that the unit used in this program is SI unit
-%						    Edited by M.-L. Li 5/31/2002
-%                                                   Modified by Meng-Lin Li, 10/21/2010
-%						    Modified by Meng-Lin Li, 10/24/2012
+%
+% EE6265 Fu-En Wang 106061531 HW2 11/14/2017
+%
 
 % start up the Field2 simulation system
 clear;
@@ -138,7 +136,7 @@ contrast
 envelope_dB = 20*log10(envelope/max(max(envelope)));
 srcPath = '../doc/src';
 %name = sprintf('%s/radius_%d.pdf', srcPath, C);
-name = sprintf('%s/wave_2.pdf', srcPath);
+name = sprintf('%s/wave_10.pdf', srcPath);
 %%{
 fig = figure();
 image(((1:Nstep)-(Nstep+1)/2)*dx*1000, (tstart+(0:size(rf_data,1))/fs)*soundv/2*1000, envelope_dB+40);
