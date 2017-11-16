@@ -7,7 +7,7 @@
 % start up the Field2 simulation system
 clear;
 addpath('./Field2')
-flag = false;
+flag = true;
 if flag
     field_init(0)
 
@@ -70,7 +70,7 @@ if flag
         % 20 ---- 33
         % 10 ---- 14
         %  5 ---- 3.92
-       C = 7;   % Contrast: in dB
+       C = 20;   % Contrast: in dB
        [scatter_pos_ini, scatter_amp] = cyst_phantom(5000,C);   % make the phantom
     end
     scatter_pos = scatter_pos_ini;
@@ -137,7 +137,8 @@ contrast
 
 envelope_dB = 20*log10(envelope/max(max(envelope)));
 srcPath = '../doc/src';
-name = sprintf('%s/contrast_%d.pdf', srcPath, C);
+%name = sprintf('%s/radius_%d.pdf', srcPath, C);
+name = sprintf('%s/wave_2.pdf', srcPath);
 %%{
 fig = figure();
 image(((1:Nstep)-(Nstep+1)/2)*dx*1000, (tstart+(0:size(rf_data,1))/fs)*soundv/2*1000, envelope_dB+40);

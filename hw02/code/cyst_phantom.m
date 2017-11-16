@@ -24,6 +24,14 @@ z_size = 20/1000;   %  Height of phantom [mm]
 z_start = 30/1000;  %  Start of phantom surface [mm];
 
 %  Creat the general scatterers
+%{
+lambda = 4.2286e-04; % in m
+grid = 0:(2*lambda):1;
+x = (randsample(grid, N, true) - 0.5)' * x_size;
+y = (randsample(grid, N, true) - 0.5)' * y_size;
+z = (randsample(grid, N, true)')*z_size + z_start;
+%}
+
 rand('state',12345);
 x = (rand (N,1)-0.5)*x_size;
 y = (rand (N,1)-0.5)*y_size;
@@ -37,6 +45,7 @@ amp=randn(N,1);
 %  Make the cyst and set the amplitudes to zero inside
 %  5 mm cyst
 r=2.5/1000;      %  Radius of cyst [mm]
+%r=2.7/1000;
 zc=40/1000;  
 xc=0/1000;    %  Place of cyst [mm]
 

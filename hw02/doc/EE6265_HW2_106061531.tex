@@ -406,6 +406,67 @@ When contrast = 5 (Figure \ref{fig:contrast-5}), the border totally disappear.
 
 As a result, I think the \textbf{minimum detectable contrast is 7 dB}.
 
+\subsection{Increase Diameters}
+With the minimum contrast in (c), now we try to increase the diameters of higher scattering inclusion and see quality change of image.
+Figure [\ref{fig:radius-25}, \ref{fig:radius-27}, \ref{fig:radius-30}] show the result of diameters [5.0, 5.4, 6.0]mm, respectively.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{src/radius_25.pdf}
+	\caption{Diameter = 5.0mm}
+	\label{fig:radius-25}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{src/radius_27.pdf}
+	\caption{Diameter = 5.4mm}
+	\label{fig:radius-27}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{src/radius_30.pdf}
+	\caption{Diameter = 6.0mm}
+	\label{fig:radius-30}
+\end{figure}
+
+\subsection{Periodically Located Scatterers}
+The origin cysts is distributed uniformly. Now we make it uniformly located at a grid map and grid size is [1, 2, 10] wavelength.
+Figure [\ref{fig:wave-1}, \ref{fig:wave-2}, \ref{fig:wave-10}] show the result of wavelength [1, 2, 10], respectively.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{src/wave_1.pdf}
+	\caption{1 Wavelength}
+	\label{fig:wave-1}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{src/wave_2.pdf}
+	\caption{2 Wavelength}
+	\label{fig:wave-2}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{src/wave_10.pdf}
+	\caption{10 Wavelength}
+	\label{fig:wave-10}
+\end{figure}
+
+\subsection{RF A-line spectrum comparison}
+Now let's see the spectrum change from original tissue-mimicking phantom to phantom in (e). Figure \ref{fig:aline-origin} and 
+\ref{fig:aline-e} show spectrum of tissue-mimicking phantom and phantom in (e), respectively.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{src/spect_line_ori.pdf}
+	\caption{Tissue-mimicking phantom}
+	\label{fig:aline-origin}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\textwidth]{src/spect_line.pdf}
+	\caption{Phantom in (e)}
+	\label{fig:aline-e}
+\end{figure}
+
+
 \end{document}
 
 
