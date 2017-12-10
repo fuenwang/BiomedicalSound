@@ -35,18 +35,44 @@ if p1a
     title('Acoustic wave')
     xlabel('time(ns)')
     ylabel('Pressure')
-    saveFig(fig, [fig_path 'wave.pdf'])
+    saveFig(fig, [fig_path 'p1a.pdf'])
 end
 
 %
 % Problem 1-b
 %
-time = 0:400;
+gauss_std = (max_val) * 5 / 100;
+p1a_time = time_axis;
+p1a_pressure = pressure + gauss_std * randn(1, length(pressure));
+time = 0:300;
 pressure = ua * GAMMA * H0 * exp(-ua * 10^2 * abs(time) * speed * 10^-6);
+pressure = pressure + gauss_std * randn(1, length(pressure));
 
-[max_val, max_idx] = max(pressure);
-[min_val, min_idx] = min(pressure);
 
+x0 = 100;
+func = @(x)sum(abs(pressure - max_val*exp(-x * abs(time) * speed * 10^-4)));
+x = lsqnonlin(func,x0);
+predict_pressure = max_val*exp(-x * abs(time) * speed * 10^-4);
+%plot(time, pressure, time, predict_pressure, 'linewidth', 1)
+if p1b
+    fig = figure();
+    
+    plot(p1a_time, p1a_pressure, 'linewidth', 1)
+    title('Acoustic wave')
+    xlabel('time(ns)')
+    ylabel('Pressure')
+    saveFig(fig, [fig_path 'p1b-1.pdf'])
+    
+    plot(time, pressure, 'linewidth', 1)
+    hold on
+    plot(time, predict_pressure, 'r', 'linewidth', 2)
+    legend('Signal', sprintf('%.2fexp(-%.2fz)', max_val, x))
+    title('Acoustic wave')
+    xlabel('time(ns)')
+    ylabel('Pressure')
+    ylim([-0.3 2.1])
+    saveFig(fig, [fig_path 'p1b-2.pdf'])
+end
 
 
 
