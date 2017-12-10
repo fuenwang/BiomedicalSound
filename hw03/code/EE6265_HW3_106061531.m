@@ -16,7 +16,8 @@ options = optimset('Display','off');
 p1a = false;
 p1b = false;
 p1d = false;
-p1e = true;
+p1e = false;
+p1f = true;
 
 %
 % Problem 1-a
