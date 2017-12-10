@@ -24,6 +24,9 @@
 \usepackage{subfigure}
 \usepackage{longtable}
 \usepackage{supertabular}
+\usepackage{biblatex}
+
+\renewcommand*{\Rnfont}{\scshape}
 
 \DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}%
@@ -150,9 +153,9 @@
 %	NAME AND CLASS SECTION
 %----------------------------------------------------------------------------------------
 
-\newcommand{\hmwkID}{hw01} % Assignment title
-\newcommand{\hmwkTitle}{Displacement and Strain}
-\newcommand{\hmwkDueDate}{Thursday,\ Nov\ 2,\ 2017} % Due date
+\newcommand{\hmwkID}{hw02} % Assignment title
+\newcommand{\hmwkTitle}{Speckle Statistics}
+\newcommand{\hmwkDueDate}{Thursday,\ Nov\ 16,\ 2017} % Due date
 \newcommand{\hmwkClass}{Principles of Biomedical Ultrasound and Photoacoustics} % Course/class
 \newcommand{\hmwkClassTime}{10:30am} % Class/lecture time
 \newcommand{\hmwkClassInstructor}{Jones} % Teacher/lecturer
@@ -179,8 +182,10 @@
 \maketitle
 \newpage
 
-\end{document}
+\renewcommand\thesubsection{\thesection.\alph{subsection}}
 
+\end{document}        
+   
 
 
 
