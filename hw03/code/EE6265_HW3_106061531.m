@@ -258,6 +258,18 @@ for i = 1:length(SO2)
         ua(i, j) = ua_SO2(e_HbO2_Hb(:,1) == lambda(j), 1);
     end
 end
+speed_light = 3 * 10^8;
+for i = 1:length(SO2)
+    for j = 1:length(lambda)
+        fc = speed_light / (lambda(j) * 10^-9);
+        BW = 0.33;
+        tc = gauspuls('cutoff',fc,BW,BWR,TPE);
+        t  = -tc : 1/fs : tc
+        excitation = gauspuls(t,fc,BW);
+        plot(excitation)
+        ssss
+    end
+end
 
 
 
