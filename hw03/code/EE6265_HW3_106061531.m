@@ -152,8 +152,47 @@ if p1e
     saveFig(fig, [fig_path 'p1e.pdf'])
 end
 
+%
+% Problem 1-e
+%
+fs = 100e6;
+fc_lst = [5 10 25 50] * 1e6;
+BW_xdc = 0.6;
+BWR = -6;
+TPE = -40;
+impulse = cell(1, length(fc_lst));
+for i = 1:length(fc_lst)
+    fc_xdc = fc_lst(i);
+    tc = gauspuls('cutoff',fc_xdc,BW_xdc,BWR,TPE);
+    t  = -tc : 1/fs : tc;
+    impulse{i} = gauspuls(t,fc_xdc,BW_xdc);
+end
 
-
+new_ua = 10:10:180;
+peak_val = cell(1, length(fc_lst));
+for i = 1:length(impulse)
+    impulse_response = impulse{i};
+    peak_val{i} = zeros(1, length(new_ua));
+    
+    for j = 1:length(new_ua)
+        time = 0:1500;
+        pressure = new_ua(j) * GAMMA * H0 * exp(-new_ua(j) * 10^2 * abs(time) * speed * 10^-6);
+        [peak, peak_idx] = max(pressure);
+        gauss_std = (peak) * 5 / 100;
+        pressure = pressure + gauss_std * randn(1, length(pressure));
+        pressure = conv(pressure, impulse_response, 'same');
+        [peak, peak_idx] = max(pressure);
+        peak_val{i}(j) = peak;
+    end
+end
+all_x = zeros(1, length(fc_lst));
+for i = 1:length(impulse)
+    peak_x = peak_val{i};
+    func = @(x)(sum(abs(peak_x - x * new_ua)));
+    x0 = 180;
+    all_x(i) = lsqnonlin(func,x0, [], [], options);
+end
+all_x
 
 
 
