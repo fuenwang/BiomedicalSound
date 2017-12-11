@@ -17,8 +17,14 @@ p1a = false;
 p1b = false;
 p1d = false;
 p1e = false;
+p1f = false;
+%{
+p1a = true;
+p1b = true;
+p1d = true;
+p1e = true;
 p1f = true;
-
+%}
 %
 % Problem 1-a
 %
