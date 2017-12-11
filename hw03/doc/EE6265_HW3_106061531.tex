@@ -245,29 +245,46 @@ As a result, the curve fits the signal pretty well I think.
 
 
 \subsection{Peak value vs absorbtion coefficient}
+\label{sec:p1d}
+Theoretically, the peak of signal will proportional to $\mu_a$ which is $\mu_a \times \Gamma \times H_0 = 0.0108\mu_a$ in my case. 
+so in this part, we need to plot the peak value of different absorbtion coefficient from 10 to 180. Figure \ref{fig:p1d} 
+shows the result.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{src/p1d.pdf}
     \caption{peak vs absorbtion coefficient}
     \label{fig:p1d}
 \end{figure}
+For better visualization, I also plot the curve fitting result for peak and $\mu_a$ and the slope is 0.011 which is very close to
+theoretical value 0.0108. So the peak value of noisy signal is still propotional to $\mu_a$.
+
 
 \subsection{$\mu_a$ (estimated) vs $\mu_a$ (real)}
+Similar to Section \ref{sec:p1d}, now for each $\mu_a$ we need to use curve fitting to estimate absorbtion coefficient for them. 
+Figure \ref{fig:p1e} shows the result.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{src/p1e.pdf}
     \caption{$\mu_a$ (estimated) vs $\mu_a$ (real)}
     \label{fig:p1e}
 \end{figure}
+For better visualization, I use curve fitting for $\mu_a$ (estimated) vs $\mu_a$ (real) in Figure \ref{fig:p1e} and the slope 
+is about 1. As a result, our estimated $\mu_a$ is really close to real one.
 
 \subsection{Repeat 4 and 5 with transducer impulse response}
+Now we repeat 4 and 5 but considering transducer impulse response. Assume the impulse responses of the transducer used are 
+Gaussian pulse centered at 5 MHz, 10 MHz, 25 MHz, and 50 MHz, respectively, with -6 dB fractional bandwidth of 60\%
+
 \subsubsection{Peak value vs absorbtion coefficient}
+Figure \ref{fig:p1f-1} show the result of Peak value vs absorbtion coefficient.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{src/p1f-1.pdf}
     \caption{Peak value vs absorbtion coefficient}
     \label{fig:p1f-1}
 \end{figure}
+In Figure \ref{fig:p1f-1}, the scalar of between peal and $\mu_a$ is not 0.011. However, we can find that their relation is still 
+proportional from the four sub figures. And when center frequecny of transducer become larger, the figure become more noisy
 
 \subsubsection{$\mu_a$ (estimated) vs $\mu_a$ (real)}
 \begin{figure}[H]
