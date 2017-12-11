@@ -186,15 +186,21 @@
 
 \section{Part \RN{1}}
 \subsection{Repeat Fig.1 in reference paper}
-
+In the reference paper, they had simulated an acoustic wave of forward and backward wave. In this problem, we need to reproduce this
+fig. Figure \ref{fig:p1a} shows the result.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{src/p1a.pdf}
     \caption{Acoustic Wave}
     \label{fig:p1a}
 \end{figure}
+Because the part between positive and negative wave is implicit, I only use a straight line connecting the two peak points by 
+dynamically solving a linear equation and make the space between them 300 ns.
 
 \subsection{Repeat Fig.2 in reference paper}
+Now add a gaussian noise to our signal which the ratio of standard deviation of the noise to the peak of the simulated 
+photoacoustic signal is 5\%. Figure \ref{fig:p1b-1} shows the noisy signal and Figure \ref{fig:p1b-2} shows the exponential decay
+of siganl.
 
 \begin{figure}[H]
     \centering
@@ -203,14 +209,29 @@
     \label{fig:p1b-1}
 \end{figure}
 
+In the reference paper, there is a equation for curve fitting this decay from author's experimental result.
+$$
+    p(z) = 9.5\exp^{-185z}
+$$
+Because the parameters I used is different, I adjust the amplitude from 9.5 to 1.94 as shown in Equation \ref{eq:decay}.
+\begin{align}
+    p(z) = 1.94\exp^{-185z}
+    \label{eq:decay}
+\end{align}
+Now Figure \ref{fig:p1b-2} show the noisy decay and curve of Equation \ref{eq:decay}.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{src/p1b-2.pdf}
     \caption{Acoustic Wave with noise}
     \label{fig:p1b-2}
 \end{figure}
+In this figure, we can find that Equation \ref{eq:decay} is fitting well.
+
 
 \subsection{Curve fitting for absorbtion coefficient}
+Now from Figure \ref{fig:p1b-2}, we apply curve fitting and get our estimated $\mu_a$ of noisy signal. Figure \ref{fig:p1c} 
+shows the estimated curve and noisy signal.
 
 \begin{figure}[H]
     \centering
@@ -219,6 +240,8 @@
     \label{fig:p1c}
 \end{figure}
 
+From my experimental result, the range of estimated $\mu_a$ is from 178 to 182 and the real $\mu_a$ I used is 180. 
+As a result, the curve fits the signal pretty well I think.
 
 
 \subsection{Peak value vs absorbtion coefficient}

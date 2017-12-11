@@ -18,13 +18,13 @@ p1b = false;
 p1d = false;
 p1e = false;
 p1f = false;
-%{
+%%{
 p1a = true;
 p1b = true;
 p1d = true;
 p1e = true;
 p1f = true;
-%}
+%%}
 %
 % Problem 1-a
 %
@@ -60,7 +60,7 @@ pressure = pressure + gauss_std * randn(1, length(pressure));
 
 
 x0 = 185;
-func = @(x)sum(abs(pressure - max_val*exp(-x * abs(time) * speed * 10^-4)));
+func = @(x)sum(abs(pressure - x * GAMMA * H0 * exp(-x * abs(time) * speed * 10^-4)));
 x = lsqnonlin(func,x0, [], [], options);
 paper_pressure = max_val*exp(-185 * abs(time) * speed * 10^-4);
 predict_pressure = max_val*exp(-x * abs(time) * speed * 10^-4);
