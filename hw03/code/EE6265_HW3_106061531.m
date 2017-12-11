@@ -153,7 +153,7 @@ if p1e
 end
 
 %
-% Problem 1-e
+% Problem 1-f
 %
 fs = 100e6;
 fc_lst = [5 10 25 50] * 1e6;
@@ -170,21 +170,30 @@ end
 
 new_ua = 10:10:180;
 peak_val = cell(1, length(fc_lst));
+predict_ua = cell(1, length(fc_lst));
 for i = 1:length(impulse)
     impulse_response = impulse{i};
     peak_val{i} = zeros(1, length(new_ua));
-    
+    predict_ua{i} = zeros(1, length(new_ua));
     for j = 1:length(new_ua)
         time = 0:1500;
         pressure = new_ua(j) * GAMMA * H0 * exp(-new_ua(j) * 10^2 * abs(time) * speed * 10^-6);
         [peak, peak_idx] = max(pressure);
         gauss_std = (peak) * 5 / 100;
         pressure = pressure + gauss_std * randn(1, length(pressure));
+        %length(pressure)
         pressure = conv(pressure, impulse_response, 'same');
+        %length(pressure)
+        func = @(x)(sum(abs(pressure - conv(x * GAMMA * H0 * exp(-x * 10^2 * abs(time) * speed * 10^-6), impulse_response, 'same'))));
+        predict_ua{i}(j) = lsqnonlin(func, new_ua(j), [], [], options);
+        %func(new_ua(j))
         [peak, peak_idx] = max(pressure);
         peak_val{i}(j) = peak;
     end
+    %break
 end
+%plot(pressure)
+%sadad
 all_x = zeros(1, length(fc_lst));
 for i = 1:length(impulse)
     peak_x = peak_val{i};
@@ -192,7 +201,37 @@ for i = 1:length(impulse)
     x0 = 180;
     all_x(i) = lsqnonlin(func,x0, [], [], options);
 end
-all_x
+if p1f
+    fig = figure();
+    for i = 1:length(impulse)
+        subplot(sprintf('22%d', i))
+        plot(new_ua, peak_val{i}, 'ro', 'linewidth', 2);
+        hold on
+        plot(new_ua, all_x(i) * new_ua, '-', 'linewidth', 2);
+        legend('peak vs ua', sprintf('y=%fx', all_x(i)), 'Location', 'NorthWest');
+        title(sprintf('Peak vs ua ( f = %d MHz)', fc_lst(i) * 10^-6))
+        xlabel('ua')
+        ylabel('Peak')
+    end
+    saveFig(fig, [fig_path 'p1f-1.pdf']);
+    
+    fig = figure();
+    for i = 1:length(impulse)
+        estimate_ua = predict_ua{i};
+        func = @(x)(sum(abs(estimate_ua - x * new_ua)));
+        x = lsqnonlin(func, 1, [], [], options);
+        
+        subplot(sprintf('22%d', i))
+        plot(new_ua, estimate_ua, 'ro', 'linewidth', 2);
+        hold on
+        plot(new_ua, x * new_ua, '-', 'linewidth', 2);
+        legend('estimate vs real', sprintf('y=%fx', x), 'Location', 'NorthWest');
+        title(sprintf('ua (estimate) vs ua (real) ( f = %d MHz)', fc_lst(i) * 10^-6))
+        xlabel('ua (real)')
+        ylabel('ua (estimate)')
+    end
+    saveFig(fig, [fig_path 'p1f-2.pdf']);
+end
 
 
 
