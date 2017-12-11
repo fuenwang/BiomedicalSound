@@ -240,6 +240,26 @@ if p1f
 end
 
 
+%
+% Problem 2-a and 2-b
+%
+
+x = 150;   % in g Hb/liter
+MW_Hb = 64500;  % g Hb/mole, molecular weight of Hb
+load e_HbO2_Hb; % molar extinction coef. table, (lambda, HbO2, Hb)
+
+SO2 = [0.2 0.4 0.6 0.8 1.0];
+lambda = [578 584 590 596];
+ua = zeros(length(SO2), length(lambda));
+
+for i = 1:length(SO2)
+    ua_SO2 = 2.303*e_HbO2_Hb(:,2)*x*SO2(i)/MW_Hb + 2.303*e_HbO2_Hb(:,3)*x*(1-SO2(i))/MW_Hb;
+    for j = 1:length(lambda)
+        ua(i, j) = ua_SO2(e_HbO2_Hb(:,1) == lambda(j), 1);
+    end
+end
+
+
 
 
 
