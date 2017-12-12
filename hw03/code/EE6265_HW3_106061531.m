@@ -18,13 +18,13 @@ p1b = false;
 p1d = false;
 p1e = false;
 p1f = false;
-%%{
+%{
 p1a = true;
 p1b = true;
 p1d = true;
 p1e = true;
 p1f = true;
-%%}
+%}
 %
 % Problem 1-a
 %
@@ -251,23 +251,35 @@ load e_HbO2_Hb; % molar extinction coef. table, (lambda, HbO2, Hb)
 SO2 = [0.2 0.4 0.6 0.8 1.0];
 lambda = [578 584 590 596];
 ua = zeros(length(SO2), length(lambda));
-
+e_HbO2 = zeros(1, length(lambda));
+e_Hb = zeros(1, length(lambda));
+peak_val = zeros(length(SO2), length(fc_lst), length(lambda));
+predict_SO2 = zeros(length(SO2), length(fc_lst));
 for i = 1:length(SO2)
     ua_SO2 = 2.303*e_HbO2_Hb(:,2)*x*SO2(i)/MW_Hb + 2.303*e_HbO2_Hb(:,3)*x*(1-SO2(i))/MW_Hb;
     for j = 1:length(lambda)
         ua(i, j) = ua_SO2(e_HbO2_Hb(:,1) == lambda(j), 1);
+        e_HbO2(j) = e_HbO2_Hb(e_HbO2_Hb(:, 1) == lambda(j), 2);
+        e_Hb(j) = e_HbO2_Hb(e_HbO2_Hb(:, 1) == lambda(j), 3);
     end
 end
-speed_light = 3 * 10^8;
+%speed_light = 3 * 10^8;
+time = 0:1500;
 for i = 1:length(SO2)
-    for j = 1:length(lambda)
-        fc = speed_light / (lambda(j) * 10^-9);
-        BW = 0.33;
-        tc = gauspuls('cutoff',fc,BW,BWR,TPE);
-        t  = -tc : 1/fs : tc
-        excitation = gauspuls(t,fc,BW);
-        plot(excitation)
-        ssss
+    for j = 1:length(fc_lst)
+        impulse_response = impulse{j};
+        for k = 1:length(lambda)
+            now_ua = ua(i, k);
+            pressure = now_ua * GAMMA * H0 * exp(-now_ua * 10^2 * abs(time) * speed * 10^-6);
+            pressure = conv(pressure, impulse_response, 'same');
+            [peak, ~] = max(pressure);
+            peak_val(i, j, k) = peak;
+        end
+        
+        A = [e_HbO2' e_Hb'];
+        b = reshape(peak_val(i, j, :), 1, 4)';
+        x = A \ b;
+        predict_SO2(i, j) = x(1) / sum(x);
     end
 end
 
