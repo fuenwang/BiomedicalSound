@@ -18,12 +18,16 @@ p1b = false;
 p1d = false;
 p1e = false;
 p1f = false;
+p2a = true;
+p2b = false;
 %{
 p1a = true;
 p1b = true;
 p1d = true;
 p1e = true;
 p1f = true;
+p2a = true;
+p2b = true;
 %}
 %
 % Problem 1-a
@@ -250,6 +254,9 @@ load e_HbO2_Hb; % molar extinction coef. table, (lambda, HbO2, Hb)
 
 SO2 = [0.2 0.4 0.6 0.8 1.0];
 lambda = [578 584 590 596];
+if p2b
+    lambda = [760 780 800 820];
+end
 ua = zeros(length(SO2), length(lambda));
 e_HbO2 = zeros(1, length(lambda));
 e_Hb = zeros(1, length(lambda));
@@ -275,11 +282,32 @@ for i = 1:length(SO2)
             [peak, ~] = max(pressure);
             peak_val(i, j, k) = peak;
         end
-        
         A = [e_HbO2' e_Hb'];
         b = reshape(peak_val(i, j, :), 1, 4)';
         x = A \ b;
         predict_SO2(i, j) = x(1) / sum(x);
+    end
+end
+
+if p2a || p2b
+    fig = figure();
+    for i = 1:length(fc_lst)
+        subplot(sprintf('22%d', i))
+        func = @(x)(sum(abs(predict_SO2(:, i)' - x * SO2)));
+        slope = lsqnonlin(func, 1.5, [], [], options);
+        plot(SO2, predict_SO2(:, i), 'ro', 'linewidth', 2);
+        hold on
+        plot(SO2, slope * SO2, 'b-', 'linewidth', 2);
+        legend('estimated vs real', sprintf('y=%fx', slope), 'Location', 'NorthWest')
+        title('SO2 (estimated) vs SO2 (real)')
+        xlabel('SO2 (real)')
+        ylabel('SO2 (estimated)')
+        ylim([0.18 1.1])
+    end
+    if p2a
+        saveFig(fig, [fig_path 'p2a.pdf']);
+    elseif p2b
+        saveFig(fig, [fig_path 'p2b.pdf']);
     end
 end
 
