@@ -247,7 +247,7 @@ As a result, the curve fits the signal pretty well I think.
 \subsection{Peak value vs absorbtion coefficient}
 \label{sec:p1d}
 Theoretically, the peak of signal will proportional to $\mu_a$ which is $\mu_a \times \Gamma \times H_0 = 0.0108\mu_a$ in my case. 
-so in this part, we need to plot the peak value of different absorbtion coefficient from 10 to 180. Figure \ref{fig:p1d} 
+So in this part, we need to plot the peak value of different absorbtion coefficient from 10 to 180. Figure \ref{fig:p1d} 
 shows the result.
 \begin{figure}[H]
     \centering
@@ -297,6 +297,25 @@ Figure \ref{fig:p1f-2} show the result.
 In Figure \ref{fig:p1f-2}, we can find that the estimated $\mu_a$ is still close to real $\mu_a$ and the slope is about 1, 
 but when transducer center frequency gets larger, the points become much noisier.
 
+
+\section{Part \RN{2}}
+Now in the section, we will use the same methodology in Part \RN{1} for simulating blood sample.
+
+\subsection{Estimate SO2 level with peaks of different $\lambda$}
+In this problem, we need to estimate SO2 level with simulated peaks of several $\lambda$ (= 578, 584, 590, and 596 nm). In class
+materials, SO2 level can be derived by solving a linear system:
+\begin{align}
+    k \times
+    \begin{bmatrix}
+        \varepsilon_{HbO2}(\lambda_1) & \varepsilon_{Hb}(\lambda_1) \\
+        \varepsilon_{HbO2}(\lambda_2) & \varepsilon_{Hb}(\lambda_2) \\
+        \varepsilon_{HbO2}(\lambda_3) & \varepsilon_{Hb}(\lambda_3) \\
+        \varepsilon_{HbO2}(\lambda_4) & \varepsilon_{Hb}(\lambda_4)
+    \end{bmatrix}
+    \begin{bmatrix}
+        gg
+    \end{bmatrix}
+\end{align}
 
 \end{document}        
    
