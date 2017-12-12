@@ -3,6 +3,7 @@
 %   EE6265 Fu-En Wang 106061531 HW3 12/10/2017
 %
 %
+close all
 clear;
 
 fig_path = '../doc/src/';
@@ -196,6 +197,9 @@ for i = 1:length(impulse)
         pressure = pressure + gauss_std * randn(1, length(pressure));
         %length(pressure)
         pressure = conv(pressure, impulse_response, 'same');
+        %close all
+        %plot(pressure)
+        %dasd
         %length(pressure)
         func = @(x)(sum(abs(pressure - conv(x * GAMMA * H0 * exp(-x * 10^2 * abs(time) * speed * 10^-6), impulse_response, 'same'))));
         predict_ua{i}(j) = lsqnonlin(func, new_ua(j), [], [], options);
@@ -215,6 +219,13 @@ for i = 1:length(impulse)
     all_x(i) = lsqnonlin(func,x0, [], [], options);
 end
 if p1f
+    fig = figure();
+    plot(impulse{1}, 'linewidth', 2);
+    xlabel('Frequency')
+    ylabel('Amplitude')
+    title('Transducer impulse reponse')
+    saveFig(fig, [fig_path 'p1f-tx.pdf']);
+    
     fig = figure();
     for i = 1:length(impulse)
         subplot(sprintf('22%d', i))

@@ -256,7 +256,9 @@ shows the result.
     \label{fig:p1d}
 \end{figure}
 For better visualization, I also plot the curve fitting result for peak and $\mu_a$ and the slope is 0.011 which is very close to
-theoretical value 0.0108. So the peak value of noisy signal is still propotional to $\mu_a$.
+theoretical value 0.0108. So the peak value of noisy signal is still propotional to $\mu_a$. And the reason I think is that
+theoretically the mean of gaussian noise is zero, so when we add such noise to signal the change of peak value will be bounded
+in a certain range and the peak will be still proportional with small error.
 
 
 \subsection{$\mu_a$ (estimated) vs $\mu_a$ (real)}
@@ -269,11 +271,25 @@ Figure \ref{fig:p1e} shows the result.
     \label{fig:p1e}
 \end{figure}
 For better visualization, I use curve fitting for $\mu_a$ (estimated) vs $\mu_a$ (real) in Figure \ref{fig:p1e} and the slope 
-is about 1. As a result, our estimated $\mu_a$ is really close to real one.
+is about 1. As a result, our estimated $\mu_a$ is really close to real one and surely proportional to it. Because our signal is
+$\mu_a * H_0 * \Gamma * \exp^{-\mu_az} + noise$ where mean of noise is zero, to get an accurate estimated $\mu_a$ I use an
+optimization function:
+\begin{align}
+    & f(x)  = (x * H_0 * \Gamma * \exp^{-xz}) - (\mu_a * H_0 * \Gamma * \exp^{-\mu_az} + noise) \\
+    & \mu_a'  = \min_x{{\abs{f(x)}}^2}
+\end{align}
+And $\mu_a'$ is the result I estimate.
 
 \subsection{Repeat 4 and 5 with transducer impulse response}
 Now we repeat 4 and 5 but considering transducer impulse response. Assume the impulse responses of the transducer used are 
-Gaussian pulse centered at 5 MHz, 10 MHz, 25 MHz, and 50 MHz, respectively, with -6 dB fractional bandwidth of 60\%
+Gaussian pulse centered at 5 MHz, 10 MHz, 25 MHz, and 50 MHz, respectively, with -6 dB fractional bandwidth of 60\%, the impulse
+reponse of transducer is shown in Figure \ref{fig:p1f-tx}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{src/p1f-tx.pdf}
+    \caption{Transducer impulse response}
+    \label{fig:p1f-tx}
+\end{figure}
 
 \subsubsection{Peak value vs absorbtion coefficient}
 Figure \ref{fig:p1f-1} show the result of Peak value vs absorbtion coefficient.
@@ -283,8 +299,9 @@ Figure \ref{fig:p1f-1} show the result of Peak value vs absorbtion coefficient.
     \caption{Peak value vs absorbtion coefficient}
     \label{fig:p1f-1}
 \end{figure}
-In Figure \ref{fig:p1f-1}, the scalar of between peal and $\mu_a$ is not 0.011. However, we can find that their relation is still 
-proportional from the four sub figures. And when center frequecny of transducer become larger, the figure become more noisy
+In Figure \ref{fig:p1f-1} we can find that their relation is still proportional from the four sub figures. However, the slope is 
+not 0.011 as Figure \ref{fig:p1d} anymore because we apply convolution to signal and transducer impulse response which will change 
+our signal magnitude but won't change the relation of them.
 
 \subsubsection{$\mu_a$ (estimated) vs $\mu_a$ (real)}
 Figure \ref{fig:p1f-2} show the result.
@@ -295,13 +312,21 @@ Figure \ref{fig:p1f-2} show the result.
     \label{fig:p1f-2}
 \end{figure}
 In Figure \ref{fig:p1f-2}, we can find that the estimated $\mu_a$ is still close to real $\mu_a$ and the slope is about 1, 
-but when transducer center frequency gets larger, the points become much noisier.
+but when transducer center frequency gets larger, the points become much noisier because of lower PSR. To get an accurate 
+$\mu_a$, I use an optimization function:
+\begin{align}
+    & f(x) = conv(x*H_0*\Gamma*\exp^{-xz}, response) - conv(\mu_a*H_0*\Gamma*\exp^{-\mu_az} + noise, response) \\
+    & \mu_a' = \min_x{{\abs{f(x)}}^2}
+\end{align}
+And $\mu_a'$ is the result I get.
 
 
 \section{Part \RN{2}}
+\label{sec:part2}
 Now in the section, we will use the same methodology in Part \RN{1} for simulating blood sample.
 
 \subsection{Estimate SO2 level with peaks of different $\lambda$}
+\label{sec:p2a}
 In this problem, we need to estimate SO2 level with simulated peaks of several $\lambda$ (= 578, 584, 590, and 596 nm). In class
 materials, SO2 level can be derived by solving a linear system:
 \begin{align}
@@ -313,10 +338,93 @@ materials, SO2 level can be derived by solving a linear system:
         \varepsilon_{HbO2}(\lambda_4) & \varepsilon_{Hb}(\lambda_4)
     \end{bmatrix}
     \begin{bmatrix}
-        gg
+        [HbO2] \\
+        [Hb]
     \end{bmatrix}
+    = 
+    \begin{bmatrix}
+        P(\lambda_1) \\
+        P(\lambda_2) \\
+        P(\lambda_3) \\
+        P(\lambda_4) 
+    \end{bmatrix}
+    \label{eq:system-1}
+\end{align}
+Although we don't know what exactly is, but when looking at Equation \ref{eq:system-1}, we can find it is a linear system. So 
+we can move $k$ into linear solution as the following formula:
+\begin{align}
+    \begin{bmatrix}
+        \varepsilon_{HbO2}(\lambda_1) & \varepsilon_{Hb}(\lambda_1) \\
+        \varepsilon_{HbO2}(\lambda_2) & \varepsilon_{Hb}(\lambda_2) \\
+        \varepsilon_{HbO2}(\lambda_3) & \varepsilon_{Hb}(\lambda_3) \\
+        \varepsilon_{HbO2}(\lambda_4) & \varepsilon_{Hb}(\lambda_4)
+    \end{bmatrix}
+    \begin{bmatrix}
+        k \times [HbO2] \\
+        k \times [Hb]
+    \end{bmatrix}
+    = 
+    \begin{bmatrix}
+        P(\lambda_1) \\
+        P(\lambda_2) \\
+        P(\lambda_3) \\
+        P(\lambda_4) 
+    \end{bmatrix}
+    \label{eq:system-2}
 \end{align}
 
+Now we can easily use psuedo inverse to get the solution 
+$
+    \begin{bmatrix}
+        k \times [HbO2] \\
+        k \times [Hb]
+    \end{bmatrix}
+$
+which k is still unknown. However, the calculation of SO2 level is:
+\begin{align*}
+    SO2 & = \frac{[HbO2]}{[HbO2] + [Hb]} \\
+        & = \frac{k \times [HbO2]}{k \times [HbO2] + k \times [Hb]} \\
+        & = \frac{[HbO2]}{[HbO2] + [Hb]}
+\end{align*}
+As a result, $k$ wont't affect the calculation of SO2 at all and thus we can just set k to any number.
+
+Now we can estimate SO2 with different transducer impulse and plot it as function of real SO2 as shown in 
+Figure \ref{fig:p2a}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{src/p2a.pdf}
+    \caption{SO2 (estimated) vs SO2 (real)}
+    \label{fig:p2a}
+\end{figure}
+In Figure \ref{fig:p2a}, we can find that our estimated SO2 is really close to grount truth and slope is almost 1. As a result,
+I think peak value of four different $\lambda$ is good enough to get SO2 level.
+
+\subsection{Estimate SO2 for different $\lambda$}
+Same as Section \ref{sec:p2a}, but now our $\lambda$ becomes [760, 780, 800, 820] nm. The result is shown in Figure \ref{fig:p2b}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{src/p2b.pdf}
+    \caption{SO2 (estimated) vs SO2 (real)}
+    \label{fig:p2b}
+\end{figure}
+In Figure \ref{fig:p2b}, we can find that our estimated SO2 is really close to grount truth and slope is almost 1. As a result,
+I think peak value of four different $\lambda$ is good enough to get SO2 level.
+
+\section{Discussion}
+After I finish this homework, I find the result in Section \ref{sec:part2} is quite different compared with result of
+other classmates.  It seem that my result is \textbf{too accurate}. After checking with them, I found the reason is the 
+convolution part. They convolute the result in Figure \ref{fig:p1a} with transducer impulse reponse, while I use result in
+Figure \ref{fig:p1b-2} and thus get such accurate result. However, I don't think this is a mistake because $\mu_a$ will directly
+affect the exponential decay and the result makes sense when I only use this part to estimate $\mu_a$ and SO2 level. But the signal
+transducer recieves is actually more like Figure \ref{fig:p1a}. As a result, I think the methods used by us are all correct
+and thus I keep my answer here.
+
+\newpage
+\section{Code Usage}
+To reproduce my result for all problems, just modify the following parameters in the beginning of my code. Just set corresponding
+config to true or false (only one of p2a and p2b can be true).
+\cppscript{src/code.m}
+And then just run it.
 \end{document}        
    
 
