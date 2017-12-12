@@ -18,8 +18,8 @@ p1b = false;
 p1d = false;
 p1e = false;
 p1f = false;
-p2a = true;
-p2b = false;
+p2a = false;
+p2b = true;
 
 
 if p2a && p2b
@@ -302,7 +302,8 @@ if p2a || p2b
         hold on
         plot(SO2, slope * SO2, 'b-', 'linewidth', 2);
         legend('estimated vs real', sprintf('y=%fx', slope), 'Location', 'NorthWest')
-        title('SO2 (estimated) vs SO2 (real)')
+        %title('SO2 (estimated) vs SO2 (real)')
+        title(sprintf('SO2 (estimate) vs SO2 (real) ( f = %d MHz)', fc_lst(i) * 10^-6))
         xlabel('SO2 (real)')
         ylabel('SO2 (estimated)')
         ylim([0.18 1.1])
