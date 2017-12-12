@@ -20,15 +20,18 @@ p1e = false;
 p1f = false;
 p2a = true;
 p2b = false;
-%{
+
+
+if p2a && p2b
+    error('Only one of p2a and p2b can be true')
+end
+%%{
 p1a = true;
 p1b = true;
 p1d = true;
 p1e = true;
 p1f = true;
-p2a = true;
-p2b = true;
-%}
+%%}
 %
 % Problem 1-a
 %
