@@ -32,15 +32,14 @@ soundv = 1.5;  % speed of sound, in mm/us
 time_delay = zeros(Nelement, Npoint);
 for iPoint = 1:Npoint,
     for iElement = 1:Nelement,
-        ???
-        time_delay(iElement,iPoint) = ?;        
+        distance = norm(pt_coordinate(iPoint, :) - array_ele_coordinate(iElement, :));
+        time_delay(iElement,iPoint) = distance / soundv; % in us        
     end
 end    
 
 
-
 % --- emulate analog channel data 
-fs_analog = ???*fc; % sampling rate to emulate analog signals, in MHz
+fs_analog = 64*fc; % sampling rate to emulate analog signals, in MHz
 impulse_response = ???; % one way, impulse response of each array element, see HW1 template
 impulse_response_2way = ???; % two way impulse response of each array element
 
