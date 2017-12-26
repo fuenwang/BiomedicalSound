@@ -40,8 +40,10 @@ end
 
 % --- emulate analog channel data 
 fs_analog = 64*fc; % sampling rate to emulate analog signals, in MHz
-impulse_response = ???; % one way, impulse response of each array element, see HW1 template
-impulse_response_2way = ???; % two way impulse response of each array element
+tc = gauspuls('cutoff',5.0E3,.6,[],-40);
+t = -tc : 1E-6 : tc;
+impulse_response = gauspuls(t,5.0E3,.6); % one way, impulse response of each array element, see HW1 template
+impulse_response_2way = impulse_response.^2; % two way impulse response of each array element
 
 max_time = max(max(time_delay));
 Nsample = ceil(max_time*fs_analog);    % number of sample points for a beam or scan-line
@@ -51,15 +53,15 @@ channel_data = zeros(Nsample, Nelement); % analog channel data
 % locate the delta fuctions
 for iElement = 1:Nelement,
     for iPoint = 1:Npoint,
-       channel_data(???,iElement) = 1;        % ??? convert time delay to index/ sample points
+       channel_data(round(time_delay(iElement,iPoint) * fs_analog) ,iElement) = 1;        % ??? convert time delay to index/ sample points
     end
 end    
 
 Npoint_impulse_response_2way = length(impulse_response_2way);
 % convolution with impulse_response_2way
 for iElement = 1:Nelement,
-    tmp = conv(impulse_response_2way, ???);   %length of tmp =  length(channel_data(:,iElement))+length(impulse_response_2way) - 1
-    ???;   % tmp: from length(channel_data(:,iElement))+length(impulse_response_2way) - 1 => length(channel_data(:,iElement))
+    tmp = conv(channel_data(:, iElement), impulse_response_2way, 'same');   %length of tmp =  length(channel_data(:,iElement))+length(impulse_response_2way) - 1
+    %???;   % tmp: from length(channel_data(:,iElement))+length(impulse_response_2way) - 1 => length(channel_data(:,iElement))
     channel_data(:,iElement) = tmp;
 end   
 
