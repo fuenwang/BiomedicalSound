@@ -67,9 +67,9 @@ end
 
 % --- make wavefield plot of analog channel data
 %???
-fig = figure();
+%fig = figure();
 mx = max(max(channel_data));
-image(1:Nelement, 1:Nsample, 255 / mx * channel_data)
+%image(1:Nelement, 1:Nsample, 255 / mx * channel_data)
 %imshow(channel_data)
 
 % --- sampled cahnnel data
@@ -78,9 +78,9 @@ D = fs_analog/fs;	% decimation rate, better D is an integer
 channel_data = channel_data(1:D:Nsample,:); % decimation
 
 % --- make wavefield plot of sampled channel data
-fig = figure();
+%fig = figure();
 mx = max(max(channel_data));
-image(1:Nelement, 1:D:Nsample, 255 / mx * channel_data)
+%image(1:Nelement, 1:D:Nsample, 255 / mx * channel_data)
 
 
 %error
@@ -88,7 +88,7 @@ image(1:Nelement, 1:D:Nsample, 255 / mx * channel_data)
 
 % --- calculate beam spacing and number of beams
 [Nsample, Nelement] = size(channel_data);
-dsin_theta = lambda / (2 * D); % beam spacing
+dsin_theta = lambda / (2 * (Nelement-1) * pitch); % beam spacing
 Nbeam = round(sqrt(3) / dsin_theta); % number of beams used to sample the 120-degree sector.
 w = hanning(Nelement);	% apodization: ones(1,Nelement) or hanning(Nelement)
 beam_buffer = zeros(Nsample,Nbeam); % r-sin(theta) beam buffer
@@ -97,17 +97,37 @@ beam_buffer = zeros(Nsample,Nbeam); % r-sin(theta) beam buffer
 
 
 % --- RF beam formation looping
+tmp = zeros(Nelement, 3);
+%w_mat = repmat(w',[Nelement 1]);
 for iBeam = 1:Nbeam,
-    iBeam
+    %iBeam
     theta = asin(dsin_theta*(iBeam-(Nbeam+1)/2));
-    rotation = [cos(theta) -sin(theta); sin(theta) cos(theta)];
+    %rotation = [cos(theta) -sin(theta); sin(theta) cos(theta)];
+    loc_z = cos(theta) * (1:Nsample); 
+    loc_x = sin(theta) * (1:Nsample);
+    loc_y = zeros(1, Nsample);
     for iSample = 1:Nsample,
         %x_beam = ;    % x cooridnate of imaging point at (R,sin(theta)), i.e., (iBeam, iSample)
         %z_beam = ;    % z cooridnate of imaging point at (R,sin(theta)), i.e., (iBeam, iSample)
-        loc = (rotation * [iSample 0]');
-        z_beam = loc(1);
-        x_beam = loc(2);
-        y_beam = 0;
+        %loc = (rotation * [iSample 0]');
+        %z_beam = loc(1);
+        %x_beam = loc(2);
+        z_beam = loc_z(iSample);
+        x_beam = loc_x(iSample);
+        y_beam = loc_y(iSample);
+        
+        tmp(:, 1) = (array_ele_coordinate(:, 1) - x_beam).^2;
+        tmp(:, 2) = (array_ele_coordinate(:, 2) - y_beam).^2;
+        tmp(:, 3) = (array_ele_coordinate(:, 3) - z_beam).^2;
+        idx = round(sqrt(sum(tmp')) / soundv * fs);
+        cond = idx >= 1 & idx <= Nsample;
+        %idx = idx(idx >= 1 & idx <= Nsample);
+        idx_flat = Nsample * (0:(Nelement-1)) + idx;
+        idx_flat = idx_flat(cond);
+        %size(channel_data(idx, :) * w)
+        beam_buffer(iSample, iBeam) = sum(channel_data(idx_flat) * w(cond, :));
+        %gg
+        %{
         for iElement = 1:Nelement, 
             %pt2element_delay = ???; % time delay between imaging point at (R, sin(theta)) or (iBeam, iSample) and Element i
             pt2element_delay = norm(array_ele_coordinate(iElement, :) - [x_beam y_beam z_beam]) / soundv;
@@ -116,15 +136,17 @@ for iBeam = 1:Nbeam,
             if (idx >= 1) && (idx <= Nsample),
             	% Create beam buffer by computing the coherent sum across the array, or DO SUM FOR EVERY OTHER ELEMENT (33 ELEMENTS SHOULD CONTRIBUTE)
                 beam_buffer(iSample, iBeam) = beam_buffer(iSample,iBeam) + w(iElement)*channel_data(idx,iElement); % delay and weighted sum
-                 
+                %beam_buffer(iSample, iBeam) = beam_buffer(iSample,iBeam) + 1*channel_data(idx,iElement);
                 % You can create Delayed channel data here ???
                 
             end
 
         end
-        
+        %}
     end        
 end
+mx = max(max(beam_buffer));
+image(255 / mx * beam_buffer)
 %{
 % --- baseband demodulatoin
 
