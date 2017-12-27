@@ -66,7 +66,10 @@ for iElement = 1:Nelement,
 end   
 
 % --- make wavefield plot of analog channel data
-???
+%???
+fig = figure();
+image('XData', 1:NElement, 'YData', 1:Nsample, channel_data)
+
 
 % --- sampled cahnnel data
 fs = ???*fc;	% new sampling rate
