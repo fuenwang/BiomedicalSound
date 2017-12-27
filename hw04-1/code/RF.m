@@ -14,6 +14,7 @@ clear all
 % --- provide transducer parameters
 fc = 5; % transmit center frequency, in MHz
 BW = 0.7;	% fractional bandwidth
+soundv = 1.5;  % speed of sound, in mm/us
 Nelement = 65; % number of array elements
 lambda = soundv/fc; % wavelength, in mm
 pitch = lambda/2;  % distance between two adjacent array elements, in mm
@@ -28,7 +29,6 @@ pt_coordinate = [-5 0 10; 0 0 20; 15 0 30];   % coordinate of point scatterers, 
 Npoint = size(pt_coordinate,1);
 
 % --- find the corresponding time delay
-soundv = 1.5;  % speed of sound, in mm/us
 time_delay = zeros(Nelement, Npoint);
 for iPoint = 1:Npoint,
     for iElement = 1:Nelement,
@@ -72,21 +72,23 @@ image('XData', 1:NElement, 'YData', 1:Nsample, channel_data)
 
 
 % --- sampled cahnnel data
-fs = ???*fc;	% new sampling rate
+fs = 4*fc;	% new sampling rate
 D = fs_analog/fs;	% decimation rate, better D is an integer
-channel_data = channel_data(???,:); % decimation
+channel_data = channel_data(1:D:Nsample,:); % decimation
 
 % --- make wavefield plot of sampled channel data
-???
+fig = figure();
+image('XData', 1:NElement, 'YData', 1:D:Nsample, channel_data)
+
 
 
 % ----- (2) RF Dynamic Receive beamforming  ---- 
 
 % --- calculate beam spacing and number of beams
 [Nsample, Nelement] = size(channel_data);
-dsin_theta = ???; % beam spacing
-Nbeam = ???; % number of beams used to sample the 120-degree sector.
-w = ???;	% apodization: ones(1,Nelement) or hanning(Nelement)
+dsin_theta = lambda / (2 * NElement); % beam spacing
+Nbeam = round(sqrt(3) / dsin_theta); % number of beams used to sample the 120-degree sector.
+w = hanning(NElement);	% apodization: ones(1,Nelement) or hanning(Nelement)
 beam_buffer = zeros(Nsample,Nbeam); % r-sin(theta) beam buffer
 
 % --- Note that you need to perform interpolation on acquired channel data here or in the following looping in order to have good enough delay accuracy ---
