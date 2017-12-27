@@ -67,9 +67,10 @@ end
 
 % --- make wavefield plot of analog channel data
 %???
-%fig = figure();
+fig = figure();
 mx = max(max(channel_data));
-%image(1:Nelement, 1:Nsample, 255 / mx * channel_data)
+image(1:Nelement, 1:Nsample, 255 / mx * channel_data)
+colormap(gray(40))
 %imshow(channel_data)
 
 % --- sampled cahnnel data
@@ -78,9 +79,10 @@ D = fs_analog/fs;	% decimation rate, better D is an integer
 channel_data = channel_data(1:D:Nsample,:); % decimation
 
 % --- make wavefield plot of sampled channel data
-%fig = figure();
+fig = figure();
 mx = max(max(channel_data));
-%image(1:Nelement, 1:D:Nsample, 255 / mx * channel_data)
+image(1:Nelement, 1:D:Nsample, 255 / mx * channel_data)
+colormap(gray(40))
 
 
 %error
@@ -145,8 +147,10 @@ for iBeam = 1:Nbeam,
         %}
     end        
 end
+fig = figure();
 mx = max(max(beam_buffer));
 image(255 / mx * beam_buffer)
+colormap(gray(40))
 %{
 % --- baseband demodulatoin
 
