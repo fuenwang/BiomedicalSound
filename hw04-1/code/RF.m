@@ -136,17 +136,17 @@ for iBeam = 1:Nbeam,
     end        
 end
 fig = figure();
-mx = max(max(beam_buffer));
-image(255 / mx * beam_buffer)
-colormap(gray(40))
-dd
+imagesc(1:Nbeam, 1:Nsample, beam_buffer)
+colorbar;
+colormap(gray)
+
 % --- baseband demodulatoin
 
 figure
 [Nsample,Nbeam] = size(beam_buffer);
 x_axis = (-fs / 2) : (fs/Nsample) : (fs / 2);
-%data = beam_buffer(:, round(Nbeam/2));
-data = beam_buffer(:, 30);
+data = beam_buffer(:, round(Nbeam/2));
+%data = beam_buffer(:, 30);
 plot(x_axis(1:end-1), abs(fftshift(fft(data - mean(data))))); % find a typical scanline to check the spectrum by fft
 xlabel('MHz');
 %{
