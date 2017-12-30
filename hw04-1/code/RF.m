@@ -136,42 +136,47 @@ for iBeam = 1:Nbeam,
     end        
 end
 fig = figure();
-imagesc(1:Nbeam, 1:Nsample, beam_buffer)
-colorbar;
-colormap(gray)
+mx = max(max(beam_buffer));
+image(1:Nbeam, 1:Nsample, 255/mx * beam_buffer)
+colormap(gray(40))
 
 % --- baseband demodulatoin
 
-figure
+fig = figure();
 [Nsample,Nbeam] = size(beam_buffer);
 x_axis = (-fs / 2) : (fs/Nsample) : (fs / 2);
 data = beam_buffer(:, round(Nbeam/2));
 %data = beam_buffer(:, 30);
-plot(x_axis(1:end-1), abs(fftshift(fft(data - mean(data))))); % find a typical scanline to check the spectrum by fft
+plot(x_axis(1:end-1), abs(fftshift(fft(data)))); % find a typical scanline to check the spectrum by fft
 xlabel('MHz');
-%{
+
 % Baseband demodulation: (1) demodulation (2) LPF
 % demodulation
-t = ((0:Nsample-1).'/fs)*ones(1,Nbeams);
+t = ((0:Nsample-1).'/fs)*ones(1,Nbeam);
 BBbeam_buffer = beam_buffer.*exp(-(sqrt(-1)*2*pi*fc*t)); % * exp(-j*2*pi*fc*t)
 
-figure % check spectrum again
-plot(???, ???); % by fft
+fig = figure(); % check spectrum again
+x_axis = (-fs / 2) : (fs/Nsample) : (fs / 2);
+data = BBbeam_buffer(:, round(Nbeam/2));
+plot(x_axis(1:end-1), abs(fftshift(fft(data))));
 xlabel('MHz');
 
 % LPF
-fcut = ???;
-forder = ???; % filter order, determined by checking if the filter response satisfies your filtering requirement
+fcut = fc;
+forder = 80; % filter order, determined by checking if the filter response satisfies your filtering requirement
 b = fir1(forder,fcut/(fs/2)); % or by fir2, FIR filter design
-figure
+fig = figure();
+%% 
 freqz(b,1); % check filter response
 
 BBbeam_buffer = conv2(b,1,BBbeam_buffer,'same'); % baseband data
 
-figure % check spectrum again
-plot(???, ???); % fft
+fig = figure(); % check spectrum again
+x_axis = (-fs / 2) : (fs/Nsample) : (fs / 2);
+data = BBbeam_buffer(:, round(Nbeam/2));
+plot(x_axis(1:end-1), abs(fftshift(fft(data))));
 xlabel('MHz');
-
+%{
 % --- Display the beam buffer over a logarithmic scale of 40 dB (i.e., 40 dB dynamic range)
 DR = 40; % dyanmic range in dB
 R_axis = ???

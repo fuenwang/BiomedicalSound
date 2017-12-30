@@ -142,7 +142,7 @@ end
 mx = max(max(beam_buffer));
 image(255 / mx * beam_buffer)
 colormap(gray(40))
-dd
+
 %%
 % --- baseband demodulatoin
 RFdata = beam_buffer(:,ceil(Nbeam/2));
@@ -178,6 +178,7 @@ BBf_axis = -fs_new/2:fs_new/length(BBRFfft):fs_new/2-fs_new/length(BBRFfft);
 figure % check spectrum again
 plot(BBf_axis, BBRFfft); % by fft
 xlabel('MHz');
+ffff
 %%
 % --- Display the beam buffer over a logarithmic scale of 40 dB (i.e., 40 dB dynamic range)
 DR = 40; % dyanmic range in dB
