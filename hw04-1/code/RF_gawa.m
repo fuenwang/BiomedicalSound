@@ -178,7 +178,7 @@ BBf_axis = -fs_new/2:fs_new/length(BBRFfft):fs_new/2-fs_new/length(BBRFfft);
 figure % check spectrum again
 plot(BBf_axis, BBRFfft); % by fft
 xlabel('MHz');
-ffff
+
 %%
 % --- Display the beam buffer over a logarithmic scale of 40 dB (i.e., 40 dB dynamic range)
 DR = 40; % dyanmic range in dB
@@ -194,6 +194,7 @@ colorbar
 xlabel('sin(theta)')
 ylabel('R (mm)')
 % title(???)
+
 %%
 % --- scan conversion
 % image
@@ -237,7 +238,7 @@ xlabel('x (mm)')
 ylabel('z (mm)')
 % title('in dB (envelope detection, DR=40)')
 
-
+ddd
 % --- PSF assessment for each point
 
 

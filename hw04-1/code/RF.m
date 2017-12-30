@@ -165,9 +165,9 @@ xlabel('MHz');
 fcut = fc;
 forder = 80; % filter order, determined by checking if the filter response satisfies your filtering requirement
 b = fir1(forder,fcut/(fs/2)); % or by fir2, FIR filter design
-fig = figure();
+%fig = figure();
 %% 
-freqz(b,1); % check filter response
+%freqz(b,1); % check filter response
 
 BBbeam_buffer = conv2(b,1,BBbeam_buffer,'same'); % baseband data
 
@@ -176,50 +176,56 @@ x_axis = (-fs / 2) : (fs/Nsample) : (fs / 2);
 data = BBbeam_buffer(:, round(Nbeam/2));
 plot(x_axis(1:end-1), abs(fftshift(fft(data))));
 xlabel('MHz');
-%{
+
 % --- Display the beam buffer over a logarithmic scale of 40 dB (i.e., 40 dB dynamic range)
 DR = 40; % dyanmic range in dB
-R_axis = ???
-sin_theta_axis = ???
-figure
-image(R_axis, sin_theta_axis, 20*log10(abs(BBbeam_buffer)/max(max(abs(BBbeam_buffer)))+eps)+DR);
+R_axis = 0:soundv/(2*fs):(Nsample-1)*soundv/(2*fs);
+sin_theta_axis = dsin_theta*((1:Nbeam)-(Nbeam+1)/2);
+fig = figure();
+image(sin_theta_axis, R_axis, 20*log10(abs(BBbeam_buffer)/max(max(abs(BBbeam_buffer)))+eps)+DR);
+size(BBbeam_buffer);
 colormap(gray(DR))
-colorbar
-axis image
 xlabel('sin(theta)')
 ylabel('R (mm)')
-% title(???)
+title('BBbeam\_buffer (40 dB range)')
 
 % --- scan conversion
 % image
-x_size = ?; % can be determined according to the size of scanning area, in mm
-z_size = ?;
-Npixel_x = ?;	% e.g., 512
-Npixel_z = ?;	% e.g., 512
-dx = x_size/Npixel_x;
-dz = z_size/Npixel_z;
+x_size = 2*max(sin_theta_axis)*max(R_axis); % can be determined according to the size of scanning area, in mm
+z_size = max(R_axis);
+Npixel_x = 512;	% e.g., 512
+Npixel_z = 512;	% e.g., 512
+dx = x_size/(Npixel_x-1);
+dz = z_size/(Npixel_z-1);
 
-sector_img = zeros(Npixel_z, Npixel_x); % sector image
-
+%sector_img = zeros(Npixel_z, Npixel_x); % sector image
+x = (-x_size/2):dx:(x_size/2);
+z = 0:dz:z_size;
+inter_theta = zeros(Npixel_z, Npixel_x);
+inter_R = zeros(Npixel_z, Npixel_x);
+for row = 1:Npixel_z
+    for col = 1:Npixel_x
+      inter_R(row, col) = norm([x(col) z(row)]);
+      inter_theta(row, col) = atan(x(col) / z(row));
+    end
+end
 % scan conversion, with Matlab function interp2() or pcolor()
-sector_img = interp2(?, ?, abs(BBbeam_buffer), ?, ?, 'bilinear'); % biliniear interpolation
+sector_img = interp2(asin(sin_theta_axis) , R_axis, abs(BBbeam_buffer), inter_theta, inter_R, 'linear'); % biliniear interpolation
 
 % display the sector image with 40 dB dynamic range
 DR = 40; % dynamic range in dB
-x_axis = ???;
-z_axis = ???; 
-figure
+x_axis = x;
+z_axis = z; 
+fig = figure();
 image(x_axis, z_axis, 20*log10(sector_img/max(max(sector_img))+eps)+DR);
 colormap(gray(DR))
-colorbar
 axis image
 xlabel('x (mm)')
 ylabel('z (mm)')
-% title('in dB (envelope detection, DR=40)')
+title('Sector img in dB (envelope detection, DR=40)')
 
 
 % --- PSF assessment for each point
-???
 
 %}
 
