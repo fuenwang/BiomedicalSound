@@ -183,6 +183,12 @@ saveFig(fig, [save_path 'b-6.pdf'])
 %%
 BBbeam_buffer = conv2(b,1,BBbeam_buffer,'same'); % baseband data
 
+fig = figure();
+mx = max(max(abs(BBbeam_buffer)));
+image(1:Nbeam, 1:Nsample, 255/mx * abs(BBbeam_buffer))
+colormap(gray(40))
+title('Beam buffer (origin2)')
+
 fig = figure(); % check spectrum again
 x_axis = (-fs / 2) : (fs/Nsample) : (fs / 2);
 data = BBbeam_buffer(:, round(Nbeam/2));
