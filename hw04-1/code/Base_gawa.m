@@ -55,7 +55,7 @@ impulse_response_2way = conv(impulse_response,impulse_response); % two way impul
 %[c,lag] = xcorr(yi,yi);
 
 max_time = max(max(time_delay));
-Nsample = ceil(max_time*fs_analog);    % number of sample points for a beam or scan-line (最多需要幾個sample點for 1 scan line)
+Nsample = ceil(max_time*fs_analog);    % number of sample points for a beam or scan-line (???h???n?X??sample?Ifor 1 scan line)
 
 
 channel_data = zeros(Nsample, Nelement); % analog channel data

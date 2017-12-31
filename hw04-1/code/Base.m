@@ -19,6 +19,7 @@ clear all
 fc = 5; % transmit center frequency, in MHz
 BW = 0.7;	% fractional bandwidth
 Nelement = 65; % number of array elements
+soundv = 1.5;  % speed of sound, in mm/us
 lambda = soundv/fc; % wavelength, in mm
 pitch = lambda/2;  % distance between two adjacent array elements, in mm
                    % you may try  pitch = lambda/4, see if you can suppress the grating lobes
@@ -32,7 +33,7 @@ pt_coordinate = [-5 0 10; 0 0 20; 15 0 30];   % coordinate of point scatterers, 
 Npoint = size(pt_coordinate,1);
 
 % --- find the corresponding time delay
-soundv = 1.5;  % speed of sound, in mm/us
+
 time_delay = zeros(Nelement, Npoint);
 for iPoint = 1:Npoint,
     for iElement = 1:Nelement,
@@ -72,33 +73,39 @@ for iElement = 1:Nelement,
 end   
 
 % --- make wavefield plot of analog channel data
-???
+fig = figure();
+imagesc(channel_data);
+colorbar;
+colormap(gray);
 
 % --- sampled cahnnel data
-fs = ???*fc;	% new sampling rate
+fs = 4*fc;	% new sampling rate
 D = fs_analog/fs;	% decimation rate, better D is an integer
-channel_data = channel_data(???,:); % decimation
+channel_data = channel_data(1:D:Nsample,:); % decimation
 
 % --- make wavefield plot of sampled channel data
-???
-
+fig = figure();
+mx = max(max(channel_data));
+imagesc(1:Nelement, 1:D:Nsample, channel_data)
+colorbar;
+colormap(gray);
 
 % ----- (2) Baseband Dynamic Receive beamforming  ---- 
 % --- Baseband demodulatoin on channel data, see the similar part of RF beamformer template
 % Baseband demodulation: (1) demodulation (2) LPF
 % demodulation
 [Nsample, Nelement] = size(channel_data);
-t = ???;
-channel_data = ???; % * exp(-j*2*pi*fc*t), demodulated channel data
+t = repmat(((0:Nsample-1)/fs)', [1 Nelement]);
+channel_data = channel_data.*exp(-(sqrt(-1)*2*pi*fc*t)); % * exp(-j*2*pi*fc*t)
 
 % LPF
-fcut = ???;
-forder = ???; % filter order, determined by checking if the filter response satisfies your filtering requirement
+fcut = fc;
+forder = 80; % filter order, determined by checking if the filter response satisfies your filtering requirement
 b = fir1(forder,fcut/(fs/2)); % or by fir2, FIR filter design
-figure
+fig = figure();
 freqz(b,1); % check filter response
 
-channel_data = conv2(b,1,???,'same'); % baseband channel data
+channel_data = conv2(b,1, channel_data,'same'); % baseband channel data
 
 % you may try to further decimate the channel data???
 % channel_data = ???;
@@ -107,25 +114,29 @@ channel_data = conv2(b,1,???,'same'); % baseband channel data
 
 
 % --- calculate beam spacing and number of beams
-dsin_theta = ???; % beam spacing
-Nbeam = ???; % number of beams used to sample the 120-degree sector.
-w = ???;	% apodization: ones(1,Nelement) or hanning(Nelement)
-
+dsin_theta = lambda / (2 * (Nelement-1) * pitch); % beam spacing
+Nbeam = round(sqrt(3) / dsin_theta); % number of beams used to sample the 120-degree sector.
+w = hanning(Nelement);	% apodization: ones(1,Nelement) or hanning(Nelement)
+%w = ones(Nelement);
 beam_buffer = zeros(Nsample,Nbeam); % r-sin(theta) beam buffer
 % --- Baseband beam formation looping
 for iBeam = 1:Nbeam,
     iBeam
     theta = asin(dsin_theta*(iBeam-(Nbeam+1)/2));
-    for iSample = 1:NSample,
+    for iSample = 1:Nsample,
 		r = soundv*(iSample/fs)/2; % the range of the imaging point 
-        x_beam = ???;    % x cooridnate of imaging point at (R,sin(theta)), i.e., (iBeam, iSample)
-        z_beam = ???;    % z cooridnate of imaging point at (R,sin(theta)), i.e., (iBeam, iSample)
+        x_beam = r * sin(theta);    % x cooridnate of imaging point at (R,sin(theta)), i.e., (iBeam, iSample)
+        z_beam = r * cos(theta);    % z cooridnate of imaging point at (R,sin(theta)), i.e., (iBeam, iSample)
         
-        for iElement = 1:Nelement, 
-            pt2element_delay = ???; % time delay between imaging point at (R, sin(theta)) or (iBeam, iSample) and Element i
-            idx = ???; % convert time delay to "index"
-	    phase_rotation = exp(sqrt(-1)*2*pi*fc*(pt2element_delay)); % absolute phase rotation exp(j*2*pi*fd*tau), tau: pt2element_delay, fd: demodulation frequency
-		%phase_rotation = exp(sqrt(-1)*2*pi*fc*(pt2element_delay-2*r/soundv)); % relative phase rotation exp(j*2*pi*fd*tau),tau = pt2element_delay - 2*r/c 
+        for iElement = 1:Nelement 
+            distance = sqrt((array_ele_coordinate(iElement, 1) - x_beam)^2 + (array_ele_coordinate(iElement, 3) - z_beam)^2);
+            pt2element_delay = 2 * distance / soundv;
+            idx = round(pt2element_delay * fs); % convert time delay to "index"
+            phase_rotation = exp(sqrt(-1)*2*pi*fc*(pt2element_delay)); 
+            % absolute phase rotation exp(j*2*pi*fd*tau), tau: pt2element_delay, fd: demodulation frequency
+            %phase_rotation = exp(sqrt(-1)*2*pi*fc*(pt2element_delay-2*r/soundv)); 
+            % relative phase rotation exp(j*2*pi*fd*tau),tau = pt2element_delay - 2*r/c 
+            
             if (idx >= 1) && (idx <= Nsample),
             	% Create beam buffer by computing the coherent sum across the array, or DO SUM FOR EVERY OTHER ELEMENT (33 ELEMENTS SHOULD CONTRIBUTE)
                 beam_buffer(iSample, iBeam) = beam_buffer(iSample,iBeam) + w(iElement)*channel_data(idx,iElement)*phase_rotation; % (fine delay and phase rotation) and weighted sum
@@ -137,51 +148,60 @@ for iBeam = 1:Nbeam,
         
     end        
 end
-
+fig = figure();
+mx = max(max(abs(beam_buffer)));
+image(1:Nbeam, 1:Nsample, 255/mx * abs(beam_buffer))
+colormap(gray(40))
 
 % --- Display the beam buffer over a logarithmic scale of 40 dB (i.e., 40 dB dynamic range)
+BBbeam_buffer = beam_buffer;
 DR = 40; % dyanmic range in dB
-R_axis = ???
-sin_theta_axis = ???
-figure
-image(R_axis, sin_theta_axis, 20*log10(abs(BBbeam_buffer)/max(max(abs(BBbeam_buffer)))+eps)+DR);
+R_axis = 0:soundv/(2*fs):(Nsample-1)*soundv/(2*fs);
+sin_theta_axis = dsin_theta*((1:Nbeam)-(Nbeam+1)/2);
+fig = figure();
+image(sin_theta_axis, R_axis, 20*log10(abs(BBbeam_buffer)/max(max(abs(BBbeam_buffer)))+eps)+DR);
+size(BBbeam_buffer);
 colormap(gray(DR))
-colorbar
-axis image
 xlabel('sin(theta)')
 ylabel('R (mm)')
-% title(???)
+title('BBbeam\_buffer (40 dB range)')
 
 % --- scan conversion
 % image
-x_size = ?; % can be determined according to the size of scanning area, in mm
-z_size = ?;
-Npixel_x = ?;	% e.g., 512
-Npixel_z = ?;	% e.g., 512
-dx = x_size/Npixel_x;
-dz = z_size/Npixel_z;
+x_size = 2*max(sin_theta_axis)*max(R_axis); % can be determined according to the size of scanning area, in mm
+z_size = max(R_axis);
+Npixel_x = 512;	% e.g., 512
+Npixel_z = 512;	% e.g., 512
+dx = x_size/(Npixel_x-1);
+dz = z_size/(Npixel_z-1);
 
-sector_img = zeros(Npixel_z, Npixel_x); % sector image
-
+x = (-x_size/2):dx:(x_size/2);
+z = 0:dz:z_size;
+inter_theta = zeros(Npixel_z, Npixel_x);
+inter_R = zeros(Npixel_z, Npixel_x);
+for row = 1:Npixel_z
+    for col = 1:Npixel_x
+      inter_R(row, col) = norm([x(col) z(row)]);
+      inter_theta(row, col) = atan(x(col) / z(row));
+    end
+end
 % scan conversion, with Matlab function interp2() or pcolor()
-sector_img = interp2(???, ???, abs(BBbeam_buffer), ???, ???, 'bilinear'); % biliniear interpolation
+sector_img = interp2(asin(sin_theta_axis) , R_axis, abs(BBbeam_buffer), inter_theta, inter_R, 'linear');
 
 % display the sector image with 40 dB dynamic range
 DR = 40; % dynamic range in dB
-x_axis = ???;
-z_axis = ???; 
-figure
+x_axis = x;
+z_axis = z; 
+fig = figure();
 image(x_axis, z_axis, 20*log10(sector_img/max(max(sector_img))+eps)+DR);
 colormap(gray(DR))
-colorbar
 axis image
 xlabel('x (mm)')
 ylabel('z (mm)')
-% title('in dB (envelope detection, DR=40)')
+title('Sector img in dB (envelope detection, DR=40)')
 
 
 % --- PSF assessment for each point
-???
 
 
 
