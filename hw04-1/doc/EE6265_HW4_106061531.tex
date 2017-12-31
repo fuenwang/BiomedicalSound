@@ -222,8 +222,53 @@ $$
 $$
 
 \subsection{RF and baseband beamforming}
+Now we show beamforming of RF and Baseband as shown in Figure [\ref{fig:RF-b-9} \ref{fig:Base-b-6}].
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{src/RF/b-9.pdf}
+    \caption{Sector image (RF)}
+    \label{fig:RF-b-9}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{src/Base/b-6.pdf}
+    \caption{Sector image (Baseband)}
+    \label{fig:Base-b-6}
+\end{figure}
 
-
+Figure \ref{fig:RF-fft-origin} show the original spectrum of center scanline for RF beamforming.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{src/RF/b-4.pdf}
+    \caption{FFT (origin)}
+    \label{fig:RF-fft-origin}
+\end{figure}
+Now we apply demodulation with the following formula
+$$
+    BBbeam = BBbeam * \exp^{-2 \pi * fc * t * j}
+$$
+And the spectrum will shift -fc as shown in Figure \ref{fig:RF-fft-shift}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{src/RF/b-5.pdf}
+    \caption{FFT (demodulation)}
+    \label{fig:RF-fft-shift}
+\end{figure}
+Now we apply a low pass filter with cutoff frquency fc (Figure \ref{fig:RF-LPF}) to preserve the main lobe only 
+(Figure \ref{fig:RF-fft-shift-LPF})
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{src/RF/b-6.pdf}
+    \caption{LPF frequency response}
+    \label{fig:RF-LPF}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{src/RF/b-7.pdf}
+    \caption{FFT (demodulation and LPF)}
+    \label{fig:RF-fft-shift-LPF}
+\end{figure}
+Now we finish all steps of baseband demodulation.
 
 
 

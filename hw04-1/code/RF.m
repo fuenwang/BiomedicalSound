@@ -9,7 +9,7 @@
 %								Dept. of Electrical Engineering, National Tsing Hua University
 
 clear all
-
+save_path = '../doc/src/RF/';
 % ----- (1) Channel Data Simulation ------ %
 % --- provide transducer parameters
 fc = 5; % transmit center frequency, in MHz
@@ -73,7 +73,8 @@ fig = figure();
 imagesc(channel_data);
 colorbar;
 colormap(gray);
-
+title('channel data (origin)')
+saveFig(fig, [save_path '/b-1.pdf'])
 %imshow(channel_data)
 
 % --- sampled cahnnel data
@@ -87,6 +88,8 @@ mx = max(max(channel_data));
 imagesc(1:Nelement, 1:D:Nsample, channel_data)
 colorbar;
 colormap(gray);
+title('channel data (sampled)')
+saveFig(fig, [save_path '/b-2.pdf'])
 
 
 %error
@@ -140,6 +143,8 @@ fig = figure();
 mx = max(max(beam_buffer));
 image(1:Nbeam, 1:Nsample, 255/mx * beam_buffer)
 colormap(gray(40))
+title('Beam buffer (origin)')
+saveFig(fig, [save_path 'b-3.pdf'])
 
 % --- baseband demodulatoin
 
@@ -150,6 +155,8 @@ data = beam_buffer(:, round(Nbeam/2));
 %data = beam_buffer(:, 30);
 plot(x_axis(1:end-1), abs(fftshift(fft(data)))); % find a typical scanline to check the spectrum by fft
 xlabel('MHz');
+title('FFT of center scanline')
+saveFig(fig, [save_path 'b-4.pdf'])
 
 % Baseband demodulation: (1) demodulation (2) LPF
 % demodulation
@@ -161,15 +168,18 @@ x_axis = (-fs / 2) : (fs/Nsample) : (fs / 2);
 data = BBbeam_buffer(:, round(Nbeam/2));
 plot(x_axis(1:end-1), abs(fftshift(fft(data))));
 xlabel('MHz');
+title('FFT of center scanline (demodulation)')
+saveFig(fig, [save_path 'b-5.pdf'])
 
 % LPF
 fcut = fc;
 forder = 80; % filter order, determined by checking if the filter response satisfies your filtering requirement
 b = fir1(forder,fcut/(fs/2)); % or by fir2, FIR filter design
-%fig = figure();
-%% 
-%freqz(b,1); % check filter response
-
+fig = figure();
+freqz(b,1); % check filter response
+title('Frequency response')
+saveFig(fig, [save_path 'b-6.pdf'])
+%%
 BBbeam_buffer = conv2(b,1,BBbeam_buffer,'same'); % baseband data
 
 fig = figure(); % check spectrum again
@@ -177,6 +187,8 @@ x_axis = (-fs / 2) : (fs/Nsample) : (fs / 2);
 data = BBbeam_buffer(:, round(Nbeam/2));
 plot(x_axis(1:end-1), abs(fftshift(fft(data))));
 xlabel('MHz');
+title('FFT of center scanline (demodulation and LPF)')
+saveFig(fig, [save_path 'b-7.pdf'])
 
 % --- Display the beam buffer over a logarithmic scale of 40 dB (i.e., 40 dB dynamic range)
 DR = 40; % dyanmic range in dB
@@ -189,6 +201,8 @@ colormap(gray(DR))
 xlabel('sin(theta)')
 ylabel('R (mm)')
 title('BBbeam\_buffer (40 dB range)')
+saveFig(fig, [save_path 'b-8.pdf'])
+
 
 % --- scan conversion
 % image
@@ -224,7 +238,7 @@ axis image
 xlabel('x (mm)')
 ylabel('z (mm)')
 title('Sector img in dB (envelope detection, DR=40)')
-     
+saveFig(fig, [save_path 'b-9.pdf'])
 
 % --- PSF assessment for each point
 

@@ -13,7 +13,7 @@
 %								Dept. of Electrical Engineering, National Tsing Hua University
 
 clear all
-
+save_path = '../doc/src/Base/';
 % ----- (1) Channel Data Simulation ------ %
 % --- provide transducer parameters
 fc = 5; % transmit center frequency, in MHz
@@ -77,7 +77,8 @@ fig = figure();
 imagesc(channel_data);
 colorbar;
 colormap(gray);
-
+title('channel data (origin)')
+saveFig(fig, [save_path '/b-1.pdf'])
 % --- sampled cahnnel data
 fs = 4*fc;	% new sampling rate
 D = fs_analog/fs;	% decimation rate, better D is an integer
@@ -89,7 +90,8 @@ mx = max(max(channel_data));
 imagesc(1:Nelement, 1:D:Nsample, channel_data)
 colorbar;
 colormap(gray);
-
+title('channel data (origin)')
+saveFig(fig, [save_path '/b-2.pdf'])
 % ----- (2) Baseband Dynamic Receive beamforming  ---- 
 % --- Baseband demodulatoin on channel data, see the similar part of RF beamformer template
 % Baseband demodulation: (1) demodulation (2) LPF
@@ -104,6 +106,9 @@ forder = 80; % filter order, determined by checking if the filter response satis
 b = fir1(forder,fcut/(fs/2)); % or by fir2, FIR filter design
 fig = figure();
 freqz(b,1); % check filter response
+title('Frequency response')
+saveFig(fig, [save_path 'b-3.pdf'])
+
 
 channel_data = conv2(b,1, channel_data,'same'); % baseband channel data
 
@@ -152,6 +157,8 @@ fig = figure();
 mx = max(max(abs(beam_buffer)));
 image(1:Nbeam, 1:Nsample, 255/mx * abs(beam_buffer))
 colormap(gray(40))
+title('Beam buffer (origin)')
+saveFig(fig, [save_path 'b-4.pdf'])
 
 % --- Display the beam buffer over a logarithmic scale of 40 dB (i.e., 40 dB dynamic range)
 BBbeam_buffer = beam_buffer;
@@ -165,6 +172,7 @@ colormap(gray(DR))
 xlabel('sin(theta)')
 ylabel('R (mm)')
 title('BBbeam\_buffer (40 dB range)')
+saveFig(fig, [save_path 'b-5.pdf'])
 
 % --- scan conversion
 % image
@@ -199,7 +207,7 @@ axis image
 xlabel('x (mm)')
 ylabel('z (mm)')
 title('Sector img in dB (envelope detection, DR=40)')
-
+saveFig(fig, [save_path 'b-6.pdf'])
 
 % --- PSF assessment for each point
 
