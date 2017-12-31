@@ -270,6 +270,39 @@ Now we apply a low pass filter with cutoff frquency fc (Figure \ref{fig:RF-LPF})
 \end{figure}
 Now we finish all steps of baseband demodulation.
 
+\subsection{Create baseband data (Matlab: ones())}
+When the \textbf{w} in source code is assigned by \textbf{ones}, the beam buffer of RF and Baseband after beamforming is shown in
+Figure \ref{fig:RF-ones} and \ref{fig:Base-ones}, respectively.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{src/RF/b-3-ones.pdf}
+    \caption{Beam buffer of RF(ones)}
+    \label{fig:RF-ones}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{src/Base/b-4-ones.pdf}
+    \caption{Beam buffer of Baseband(ones)}
+    \label{fig:Base-ones}
+\end{figure}
+
+
+\subsection{Create baseband data (Matlab: hanning())}
+When the \textbf{w} in source code is assigned by \textbf{hanning}, the beam buffer of RF and Baseband after beamforming is shown in
+Figure \ref{fig:RF-hanning} and \ref{fig:Base-hanning}, respectively.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{src/RF/b-3-hanning.pdf}
+    \caption{Beam buffer of RF(hanning)}
+    \label{fig:RF-hanning}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{src/Base/b-4-hanning.pdf}
+    \caption{Beam buffer of Baseband(hanning)}
+    \label{fig:Base-hanning}
+\end{figure}
+
 
 
 

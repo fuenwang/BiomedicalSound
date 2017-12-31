@@ -121,8 +121,8 @@ channel_data = conv2(b,1, channel_data,'same'); % baseband channel data
 % --- calculate beam spacing and number of beams
 dsin_theta = lambda / (2 * (Nelement-1) * pitch); % beam spacing
 Nbeam = round(sqrt(3) / dsin_theta); % number of beams used to sample the 120-degree sector.
-w = hanning(Nelement);	% apodization: ones(1,Nelement) or hanning(Nelement)
-%w = ones(Nelement);
+%w = hanning(Nelement);	% apodization: ones(1,Nelement) or hanning(Nelement)
+w = ones(Nelement);
 beam_buffer = zeros(Nsample,Nbeam); % r-sin(theta) beam buffer
 % --- Baseband beam formation looping
 for iBeam = 1:Nbeam,
@@ -158,7 +158,7 @@ mx = max(max(abs(beam_buffer)));
 image(1:Nbeam, 1:Nsample, 255/mx * abs(beam_buffer))
 colormap(gray(40))
 title('Beam buffer (origin)')
-saveFig(fig, [save_path 'b-4.pdf'])
+saveFig(fig, [save_path 'b-4-ones.pdf'])
 
 % --- Display the beam buffer over a logarithmic scale of 40 dB (i.e., 40 dB dynamic range)
 BBbeam_buffer = beam_buffer;

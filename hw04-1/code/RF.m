@@ -110,8 +110,8 @@ end
 
 dsin_theta = lambda / (2 * (Nelement-1) * pitch); % beam spacing
 Nbeam = round(sqrt(3) / dsin_theta); % number of beams used to sample the 120-degree sector.
-%w = ones(Nelement);	% apodization: ones(1,Nelement) or hanning(Nelement)
-w = hamming(Nelement);
+w = ones(Nelement);	% apodization: ones(1,Nelement) or hanning(Nelement)
+%w = hanning(Nelement);
 beam_buffer = zeros(Nsample_new,Nbeam); % r-sin(theta) beam buffer
 
 fs = fs_new;
@@ -144,7 +144,7 @@ mx = max(max(beam_buffer));
 image(1:Nbeam, 1:Nsample, 255/mx * beam_buffer)
 colormap(gray(40))
 title('Beam buffer (origin)')
-saveFig(fig, [save_path 'b-3.pdf'])
+saveFig(fig, [save_path 'b-3-ones.pdf'])
 
 % --- baseband demodulatoin
 
