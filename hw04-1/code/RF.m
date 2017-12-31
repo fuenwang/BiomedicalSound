@@ -224,7 +224,7 @@ axis image
 xlabel('x (mm)')
 ylabel('z (mm)')
 title('Sector img in dB (envelope detection, DR=40)')
-
+     
 
 % --- PSF assessment for each point
 
