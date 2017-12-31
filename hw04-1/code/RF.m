@@ -109,6 +109,7 @@ for i = 1 : size(channel_data,2),
 end
 
 dsin_theta = lambda / (2 * (Nelement-1) * pitch); % beam spacing
+%dsin_theta = lambda / (1 * (Nelement-1) * pitch); % beam spacing
 Nbeam = round(sqrt(3) / dsin_theta); % number of beams used to sample the 120-degree sector.
 w = ones(Nelement);	% apodization: ones(1,Nelement) or hanning(Nelement)
 %w = hanning(Nelement);
