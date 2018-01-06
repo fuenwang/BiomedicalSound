@@ -266,7 +266,7 @@ for i = 1:length(data)-1
             axial_locs_6(idx1) = i;
             idx1 = idx1 + 1;
         elseif data(i) > axial_pks_6(idx1) && data(i+1) < axial_pks_6(idx1)
-            axial_locs_6(idx1) = i;
+            axial_locs_6(idx1) = i+1;
             idx1 = idx1 + 1;
         end
     end
@@ -275,11 +275,20 @@ for i = 1:length(data)-1
             axial_locs_20(idx2) = i;
             idx2 = idx2 + 1;
         elseif data(i) > axial_pks_20(idx2) && data(i+1) < axial_pks_20(idx2)
-            axial_locs_20(idx2) = i;
+            axial_locs_20(idx2) = i+1;
             idx2 = idx2 + 1;
         end
     end
 end
+fig = figure();
+hold on
+ax = 0:dx:x_size;
+plot(ax, data);
+plot(locs * dx, data(locs), 'ro');
+plot(axial_locs_6 * dx, data(axial_locs_6), 'go')
+plot(axial_locs_20 * dx, data(axial_locs_20), 'bo')
+title('Max axial')
+saveFig(fig, [save_path 'axial.pdf'])
 
 data = max(20*log10(abs(sector_img')/max(max(abs(sector_img)))+eps));
 [pks, locs] = findpeaks(data, 'MinPeakHeight',-5);
@@ -297,7 +306,7 @@ for i = 1:length(data)-1
             axial_locs_6(idx1) = i;
             idx1 = idx1 + 1;
         elseif data(i) > axial_pks_6(idx1) && data(i+1) < axial_pks_6(idx1)
-            axial_locs_6(idx1) = i;
+            axial_locs_6(idx1) = i+1;
             idx1 = idx1 + 1;
         end
     end
@@ -306,14 +315,20 @@ for i = 1:length(data)-1
             axial_locs_20(idx2) = i;
             idx2 = idx2 + 1;
         elseif data(i) > axial_pks_20(idx2) && data(i+1) < axial_pks_20(idx2)
-            axial_locs_20(idx2) = i;
+            axial_locs_20(idx2) = i+1;
             idx2 = idx2 + 1;
         end
     end
 end
-
-
-
+fig = figure();
+hold on
+az = 0:dz:z_size;
+plot(az, data);
+plot(locs * dz, data(locs), 'ro');
+plot(axial_locs_6 * dz, data(axial_locs_6), 'go')
+plot(axial_locs_20 * dz, data(axial_locs_20), 'bo')
+title('Max lateral')
+saveFig(fig, [save_path 'lateral.pdf'])
 
 
 
