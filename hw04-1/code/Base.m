@@ -207,7 +207,7 @@ axis image
 xlabel('x (mm)')
 ylabel('z (mm)')
 title('Sector img in dB (envelope detection, DR=40)')
-saveFig(fig, [save_path 'b-6.pdf'])
+saveFig(fig, [save_path 'b-6-ones.pdf'])
 
 % --- PSF assessment for each point
 
