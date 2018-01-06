@@ -47,7 +47,8 @@ fs_analog = 64*fc; % sampling rate to emulate analog signals, in MHz
 
 tc = gauspuls('cutoff',5E6,0.7,-6,-40);
 t  = -tc : 1/(fs_analog*1E6) : tc;
-yi = gauspuls(t,5E6,0.7); plot(t,yi)
+yi = gauspuls(t,5E6,0.7); 
+%%plot(t,yi)
 
 impulse_response = yi; % one way, impulse response of each array element, see HW1 template
 impulse_response = impulse_response/max(abs(fft(impulse_response)));
@@ -55,7 +56,7 @@ impulse_response_2way = conv(impulse_response,impulse_response); % two way impul
 %[c,lag] = xcorr(yi,yi);
 
 max_time = max(max(time_delay));
-Nsample = ceil(max_time*fs_analog);    % number of sample points for a beam or scan-line (???h???n?X??sample?Ifor 1 scan line)
+Nsample = ceil(max_time*fs_analog);    % number of sample points for a beam or scan-line (最多需要幾個sample點for 1 scan line)
 
 
 channel_data = zeros(Nsample, Nelement); % analog channel data
@@ -79,7 +80,9 @@ figure
 imagesc(channel_data);
 colorbar;
 colormap(gray);
-
+title('Channel data wavefield');
+xlabel('Channel');
+ylabel('Sample points');
 % --- sampled cahnnel data
 fs = 4*fc;	% new sampling rate
 D = fs_analog/fs;	% decimation rate, better D is an integer
@@ -90,7 +93,9 @@ figure
 imagesc(channel_data);
 colorbar;
 colormap(gray);
-
+title('Sampled channel data wavefield');
+xlabel('Channel');
+ylabel('Sample points');
 %%
 % ----- (2) RF Dynamic Receive beamforming  ---- 
 
@@ -108,56 +113,81 @@ for i = 1 : size(channel_data,2),
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 dsin_theta = lambda/(2*(Nelement-1)*pitch); % beam spacing
+%dsin_theta = lambda/((Nelement-1)*pitch); % beam spacing
 Nbeam = ceil(3.^(0.5)/dsin_theta); % number of beams used to sample the 120-degree sector.
 w = ones(1,Nelement);	% apodization: ones(1,Nelement) or hanning(Nelement)
 %w = hanning(Nelement);
 beam_buffer = zeros(Nsample_new,Nbeam); % r-sin(theta) beam buffer
 
-
-
+%%
 % --- RF beam formation looping
 for iBeam = 1:Nbeam,
     iBeam
     theta = asin(dsin_theta*(iBeam-(Nbeam+1)/2));
-    theta ;
+    theta 
     for iSample = 1:Nsample_new,
         x_beam = (iSample)*soundv/(2*fs_new)*sin(theta);    % x cooridnate of imaging point at (R,sin(theta)), i.e., (iBeam, iSample)
         z_beam = (iSample)*soundv/(2*fs_new)*cos(theta);    % z cooridnate of imaging point at (R,sin(theta)), i.e., (iBeam, iSample)
-        
         for iElement = 1:Nelement, 
             pt2element_delay = sqrt((abs(x_beam-array_ele_coordinate(iElement,1)).^2+(z_beam-0).^2))/(soundv/2); % time delay between imaging point at (R, sin(theta)) or (iBeam, iSample) and Element i
             idx = ceil(pt2element_delay*fs_new); % convert time delay to "index"
 
             if (idx >= 1) && (idx <= Nsample_new),
             	% Create beam buffer by computing the coherent sum across the array, or DO SUM FOR EVERY OTHER ELEMENT (33 ELEMENTS SHOULD CONTRIBUTE)
+                %if (ceil(iElement/2)*2 ~= iElement),
                 beam_buffer(iSample, iBeam) = beam_buffer(iSample,iBeam) + w(iElement)*channel_data_new(idx,iElement); % delay and weighted sum                
-                % You can create Delayed channel data here ???
-       
+                %end
             end
-
         end
-        
     end      
 end
-mx = max(max(beam_buffer));
-image(255 / mx * beam_buffer)
-colormap(gray(40))
 
 %%
+%for delayed channel data
+[a,b] = size(channel_data_new);
+delayed_channel_data = zeros(a,b);
+point = 3;
+x_targetpoint = pt_coordinate(point,1);
+z_targetpoint = pt_coordinate(point,3);
+complete = 0;
+minidx = 10000;
+delay_array = zeros(1,b);
+for iElement = 1:Nelement,   
+    % You can create Delayed channel data here ??? 
+    pt2element_delay = sqrt((abs(x_targetpoint-array_ele_coordinate(iElement,1)).^2+(z_targetpoint-0).^2))/(soundv/2); % time delay between imaging point at (R, sin(theta)) or (iBeam, iSample) and Element i
+    idx = ceil(pt2element_delay*fs_new);
+    delay_array(1,iElement) = idx;
+    %channel_data_new(:,iElement) = [channel_data_new(idx:end,iElement);zeros(idx-1,1)];
+end   
+delay_array_new = delay_array - ones(1,b) * min(delay_array);
+for iElement = 1:Nelement,   
+    delayed_channel_data(:,iElement) = [channel_data_new(1+delay_array_new(1,iElement):end,iElement);zeros(delay_array_new(1,iElement),1)];
+end
+figure
+imagesc(delayed_channel_data);
+colorbar;
+colormap(gray);
+title('Sampled channel data wavefield');
+xlabel('Channel');
+ylabel('Sample points');
+%%
 % --- baseband demodulatoin
-RFdata = beam_buffer(:,ceil(Nbeam/2));
-RFfft = fftshift(abs(fft(RFdata)));
+%RFdata = beam_buffer(:,ceil(Nbeam/2));
+RFfft = fftshift(abs(fft(beam_buffer)));
 f_axis = -fs_new/2:fs_new/length(RFfft):fs_new/2-fs_new/length(RFfft);
 figure
 plot(f_axis, RFfft); % find a typical scanline to check the spectrum by fft
-xlabel('MHz');
+%xlabel('MHz');
+title('Spectra of RF beamforming');
+xlabel('Frequency(MHz)');
+%ylabel('Sample points');
 %%
 % Baseband demodulation: (1) demodulation (2) LPF
 % demodulation
 t = ((0:Nsample_new-1).'/fs_new)*ones(1,Nbeam);
 BBbeam_buffer = beam_buffer.*exp(-(sqrt(-1)*2*pi*fc*t)); % * exp(-j*2*pi*fc*t)
 BBRFdata = BBbeam_buffer(:,ceil(Nbeam/2));
-BBRFfft = fftshift(abs(fft(BBRFdata)));
+BBRFfft = fftshift(abs(fft(BBbeam_buffer)));
 BBf_axis = -fs_new/2:fs_new/length(BBRFfft):fs_new/2-fs_new/length(BBRFfft);
 figure % check spectrum again
 plot(BBf_axis, BBRFfft); % by fft
@@ -173,12 +203,11 @@ freqz(b,1); % check filter response
 
 BBbeam_buffer = conv2(b,1,BBbeam_buffer,'same'); % baseband data
 BBRFdata = BBbeam_buffer(:,ceil(Nbeam/2));
-BBRFfft = fftshift(abs(fft(BBRFdata)));
+BBRFfft = fftshift(abs(fft(BBbeam_buffer)));
 BBf_axis = -fs_new/2:fs_new/length(BBRFfft):fs_new/2-fs_new/length(BBRFfft);
 figure % check spectrum again
 plot(BBf_axis, BBRFfft); % by fft
 xlabel('MHz');
-
 %%
 % --- Display the beam buffer over a logarithmic scale of 40 dB (i.e., 40 dB dynamic range)
 DR = 40; % dyanmic range in dB
@@ -194,7 +223,6 @@ colorbar
 xlabel('sin(theta)')
 ylabel('R (mm)')
 % title(???)
-
 %%
 % --- scan conversion
 % image
@@ -236,12 +264,97 @@ colorbar
 axis image
 xlabel('x (mm)')
 ylabel('z (mm)')
-% title('in dB (envelope detection, DR=40)')
+title('Sector image in dB (envelope detection, DR=40)')
 
-ddd
+%%
 % --- PSF assessment for each point
 
+projection = max(20*log10(abs(sector_img)/max(max(abs(sector_img)))+eps));
+[pks,locs] = findpeaks(projection,'MinPeakHeight',-5);
+res6locs = zeros(1,6);
+res6pks = [pks(1)-6 pks(1)-6 pks(2)-6 pks(2)-6 pks(3)-6 pks(3)-6];
+res20locs = zeros(1,6);
+res20pks = [pks(1)-20 pks(1)-20 pks(2)-20 pks(2)-20 pks(3)-20 pks(3)-20];
+number1 = 1;
+number2 = 1;
+for i = 1:length(projection)-1,
+    if (number1<7)
+        if (projection(i) < res6pks(number1) && projection(i+1) > res6pks(number1))
+            if(ceil(number1/2)*2 ~= number1)
+                res6locs(number1) = i;
+                number1 = number1+1;
+            end
+        elseif (projection(i) > res6pks(number1) && projection(i+1) < res6pks(number1))
+            if(ceil(number1/2)*2 == number1)
+                res6locs(number1) = i;
+                number1 = number1+1;
+            end
+        end
+    end
+    if (number2<7)
+        if (projection(i) < res20pks(number2) && projection(i+1) > res20pks(number2))
+            if(ceil(number2/2)*2 ~= number2)
+                res20locs(number2) = i;
+                number2 = number2+1;
+            end
+        elseif (projection(i) > res20pks(number2) && projection(i+1) < res20pks(number2))
+            if(ceil(number2/2)*2 == number2)
+                res20locs(number2) = i;
+                number2 = number2+1;
+            end
+        end
+    end
+end
+latres6 = dx*[res6locs(2)-res6locs(1) res6locs(4)-res6locs(3) res6locs(6)-res6locs(5)]
+latres20 = dx*[res20locs(2)-res20locs(1) res20locs(4)-res20locs(3) res20locs(6)-res20locs(5)]
+figure
+plot(x_axis,projection,locs*dx-x_size/2,pks,'o',res6locs*dx-x_size/2,res6pks,'bo', res20locs*dx-x_size/2,res20pks,'go');
+grid on
+title('Max axial projection in dB')
 
+%%
+projection2 = max(20*log10(abs(sector_img')/max(max(abs(sector_img)))+eps));
+[pks2,locs2] = findpeaks(projection2,'MinPeakHeight',-5);
+res6locs2 = zeros(1,6);
+res6pks2 = [pks2(1)-6 pks2(1)-6 pks2(2)-6 pks2(2)-6 pks2(3)-6 pks2(3)-6];
+res20locs2 = zeros(1,6);
+res20pks2 = [pks2(1)-20 pks2(1)-20 pks2(2)-20 pks2(2)-20 pks2(3)-20 pks2(3)-20];
+number3 = 1;
+number4 = 1;
+for i = 1:length(projection2)-1,
+    if (number3<7)
+        if (projection2(i) < res6pks2(number3) && projection2(i+1) > res6pks2(number3))
+            if(ceil(number3/2)*2 ~= number3)
+                res6locs2(number3) = i;
+                number3 = number3+1;
+            end
+        elseif (projection2(i) > res6pks2(number3) && projection2(i+1) < res6pks2(number3))
+            if(ceil(number3/2)*2 == number3)
+                res6locs2(number3) = i;
+                number3 = number3+1;
+            end
+        end
+    end
+    if (number4<7)
+        if (projection2(i) < res20pks2(number4) && projection2(i+1) > res20pks2(number4))
+            if(ceil(number4/2)*2 ~= number4)
+                res20locs2(number4) = i;
+                number4 = number4+1;
+            end
+        elseif (projection2(i) > res20pks2(number4) && projection2(i+1) < res20pks2(number4))
+            if(ceil(number4/2)*2 == number4)
+                res20locs2(number4) = i;
+                number4 = number4+1;
+            end
+        end
+    end
+end
+axires6 = dx*[res6locs2(2)-res6locs2(1) res6locs2(4)-res6locs2(3) res6locs2(6)-res6locs2(5)]
+axires20 = dx*[res20locs2(2)-res20locs2(1) res20locs2(4)-res20locs2(3) res20locs2(6)-res20locs2(5)]
 
+figure
+plot(z_axis,projection2,locs2*dz,pks2,'o',res6locs2*dz,res6pks2,'bo',res20locs2*dz,res20pks2,'go');
+title('Max lateral projection in dB')
+grid on
 
 
