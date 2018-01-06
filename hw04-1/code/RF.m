@@ -287,6 +287,9 @@ plot(ax, data);
 plot(locs * dx, data(locs), 'ro');
 plot(axial_locs_6 * dx, data(axial_locs_6), 'go')
 plot(axial_locs_20 * dx, data(axial_locs_20), 'bo')
+legend('axial peak', 'peaks', '-6dB', '-20dB')
+xlabel('x (mm)')
+ylabel('dB')
 title('Max axial')
 saveFig(fig, [save_path 'axial.pdf'])
 
@@ -327,6 +330,9 @@ plot(az, data);
 plot(locs * dz, data(locs), 'ro');
 plot(axial_locs_6 * dz, data(axial_locs_6), 'go')
 plot(axial_locs_20 * dz, data(axial_locs_20), 'bo')
+legend('axial peak', 'peaks', '-6dB', '-20dB')
+xlabel('z (mm)')
+ylabel('dB')
 title('Max lateral')
 saveFig(fig, [save_path 'lateral.pdf'])
 
