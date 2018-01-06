@@ -248,7 +248,82 @@ title('Sector img in dB (envelope detection, DR=40)')
 saveFig(fig, [save_path 'b-9.pdf'])
 
 % --- PSF assessment for each point
+%%
 
-%}
+data = max(20*log10(abs(sector_img)/max(max(abs(sector_img)))+eps));
+[pks, locs] = findpeaks(data, 'MinPeakHeight',-5);
+
+axial_pks_6 = [pks(1)-6 pks(1)-6 pks(2)-6 pks(2)-6 pks(3)-6 pks(3)-6];
+axial_pks_20 = [pks(1)-20 pks(1)-20 pks(2)-20 pks(2)-20 pks(3)-20 pks(3)-20];
+axial_locs_6 = zeros(1, 6);
+axial_locs_20 = zeros(1, 6);
+
+idx1 = 1;
+idx2 = 1;
+for i = 1:length(data)-1
+    if idx1 < 7
+        if data(i) < axial_pks_6(idx1) && data(i+1) > axial_pks_6(idx1)
+            axial_locs_6(idx1) = i;
+            idx1 = idx1 + 1;
+        elseif data(i) > axial_pks_6(idx1) && data(i+1) < axial_pks_6(idx1)
+            axial_locs_6(idx1) = i;
+            idx1 = idx1 + 1;
+        end
+    end
+    if idx2 < 7
+        if data(i) < axial_pks_20(idx2) && data(i+1) > axial_pks_20(idx2)
+            axial_locs_20(idx2) = i;
+            idx2 = idx2 + 1;
+        elseif data(i) > axial_pks_20(idx2) && data(i+1) < axial_pks_20(idx2)
+            axial_locs_20(idx2) = i;
+            idx2 = idx2 + 1;
+        end
+    end
+end
+
+data = max(20*log10(abs(sector_img')/max(max(abs(sector_img)))+eps));
+[pks, locs] = findpeaks(data, 'MinPeakHeight',-5);
+
+axial_pks_6 = [pks(1)-6 pks(1)-6 pks(2)-6 pks(2)-6 pks(3)-6 pks(3)-6];
+axial_pks_20 = [pks(1)-20 pks(1)-20 pks(2)-20 pks(2)-20 pks(3)-20 pks(3)-20];
+axial_locs_6 = zeros(1, 6);
+axial_locs_20 = zeros(1, 6);
+
+idx1 = 1;
+idx2 = 1;
+for i = 1:length(data)-1
+    if idx1 < 7
+        if data(i) < axial_pks_6(idx1) && data(i+1) > axial_pks_6(idx1)
+            axial_locs_6(idx1) = i;
+            idx1 = idx1 + 1;
+        elseif data(i) > axial_pks_6(idx1) && data(i+1) < axial_pks_6(idx1)
+            axial_locs_6(idx1) = i;
+            idx1 = idx1 + 1;
+        end
+    end
+    if idx2 < 7
+        if data(i) < axial_pks_20(idx2) && data(i+1) > axial_pks_20(idx2)
+            axial_locs_20(idx2) = i;
+            idx2 = idx2 + 1;
+        elseif data(i) > axial_pks_20(idx2) && data(i+1) < axial_pks_20(idx2)
+            axial_locs_20(idx2) = i;
+            idx2 = idx2 + 1;
+        end
+    end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
