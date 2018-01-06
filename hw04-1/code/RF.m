@@ -145,7 +145,7 @@ mx = max(max(beam_buffer));
 image(1:Nbeam, 1:Nsample, 255/mx * beam_buffer)
 colormap(gray(40))
 title('Beam buffer (origin)')
-saveFig(fig, [save_path 'b-3-ones.pdf'])
+%saveFig(fig, [save_path 'b-3-ones.pdf'])
 
 % --- baseband demodulatoin
 
