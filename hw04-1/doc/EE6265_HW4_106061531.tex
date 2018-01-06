@@ -348,6 +348,9 @@ Figure \ref{fig:RF-hanning-40db} show the 40dB result for (d).
     \caption{(d) Beam buffer of RF (40 dB dynamic range)}
     \label{fig:RF-hanning-40db}
 \end{figure}
+Compared with Figure \ref{fig:RF-b-40db}, the focus points in Figure \ref{fig:RF-hanning-40db} are just more like a \textbf{point}.
+This is because the main lobe width of hanning window is wider than a rectangular window (ones()), and this can be seen as a smooth
+operation. So the result in figure \ref{fig:RF-hanning-40db} seems better.
 
 Figure \ref{fig:RF-2pitch-40db} show the 40dB result for (e).
 \begin{figure}[H]
@@ -356,6 +359,8 @@ Figure \ref{fig:RF-2pitch-40db} show the 40dB result for (e).
     \caption{(e) Beam buffer of RF (40 dB dynamic range)}
     \label{fig:RF-2pitch-40db}
 \end{figure}
+Because we increase the pitch (i.e distance between each $\sin \theta$ line increases), the total number of sample line decreases.
+As a result, we can see a poorer resolution in Figure \ref{fig:RF-2pitch-40db} than in Figure \ref{fig:RF-b-40db}.
 
 Figure \ref{fig:RF-everyones-40db} show the 40dB result for (f).
 \begin{figure}[H]
@@ -364,6 +369,9 @@ Figure \ref{fig:RF-everyones-40db} show the 40dB result for (f).
     \caption{(f) Beam buffer of RF (40 dB dynamic range)}
     \label{fig:RF-everyones-40db}
 \end{figure}
+In Figure \ref{fig:RF-everyones-40db}, the contrast between area around focus point and the other is much worse than 
+Figure \ref{fig:RF-b-40db}. This is because we only use data recieved from half number of elements and the energy difference
+of focus point area and the others will get much smaller. So the contrast becomes worse.
 
 \subsection{Sector Images}
 Figure \ref{fig:RF-ones-sector} and \ref{fig:Base-ones-sector} show the sector images in (c), respectively.
