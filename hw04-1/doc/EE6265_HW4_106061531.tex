@@ -428,12 +428,49 @@ sector image, respectively.
     \caption{Axial result}
     \label{fig:RF-axial}
 \end{figure}
+The theoretical -6dB axial resolution is $soundv / fc = 0.3 mm$, while my experimental value is $0.4 mm$. The theoretical 
+-20dB axial resolution is $3 * soundv / fc = 0.9 mm$, while my experimental value is $0.93 mm$. There are a small error but I
+think they are close enough.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{src/RF/lateral.pdf}
     \caption{Lateral result}
     \label{fig:RF-lateral}
 \end{figure}
+The theoretical -6dB lateral resolution is $z * lambda / (2a) = 0.15 mm$, while my experimental value is $0.21 mm$. There are a 
+small error but I think they are close enough.
+
+\subsection{With/without phase rotation}
+Figure \ref{fig:base-phase} shows the result of baseband beamforming with phase rotation, while Figure \ref{fig:base-nophase}
+shows the result without phase rotation.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{src/Base/b-6-ones.pdf}
+    \caption{With phase rotation}
+    \label{fig:base-phase}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{src/Base/b-6-ones-no.pdf}
+    \caption{Without phase rotation}
+    \label{fig:base-nophase}
+\end{figure}
+From the two figures, we can see that the focusing quality of result with phase rotation is much better than that without phase
+rotation. In signal processing, phase can be treated as a delay. As a result, when we remove phase rotation, all the frequency
+component will become \textbf{no delay} and they cannot focus on certain point because all signal pulse are not lanuched
+simultaneously.
+
+\subsection{On/off axis for RF beamforming}
+Figure \ref{fig:RF-off} shows the result of RF beamforming with off-axis.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{src/RF/off-axis.pdf}
+    \caption{RF (off axis)}
+    \label{fig:RF-off}
+\end{figure}
+In this figure, you can find that there is a slope in the three line while the result of on-axis is three flat line. This is because
+we delay all channel data to a same delay, so the three line will be flat without slope.
 
 \end{document}        
    

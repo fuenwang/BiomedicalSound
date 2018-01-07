@@ -1,19 +1,9 @@
-% Template of HW1 Part1 - Baseband Beamformation: Single Element Synthetic Aperture Focusing
 %
-%							No guarantee
-%								Edited by Meng-Lin Li, 12/03/2008
-%								Modified by Meng-Lin Li, 12/14/2010
-%								Modified by Meng-Lin Li, 12/03/2013
+% EE6265 Fu-En Wang 106061531 HW4 1/7/2017
 %
-%	Phase rotation: to avoid re-modulation, tau for phase rotation = pt2element_delay - 2*r/c where r is the range of the imaging point 
-%   tau: relative term over array elements, not absolute term
-%								Modified by Meng-Lin Li, 12/20/2013
-%								Modified by Meng-Lin Li, Ph. D., 12/16/2015
-%								Modified by Meng-Lin Li, Ph. D., 10/27/2016
-%								Dept. of Electrical Engineering, National Tsing Hua University
 
 clear all
-save_path = '../doc/src/Base/';
+save_path = './';
 % ----- (1) Channel Data Simulation ------ %
 % --- provide transducer parameters
 fc = 5; % transmit center frequency, in MHz
